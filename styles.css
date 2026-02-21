@@ -51,7 +51,7 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 80px;
+    scroll-padding-top: 70px;
     font-size: 16px;
 }
 
@@ -102,18 +102,21 @@ ul {
             radial-gradient(ellipse at 80% 20%, rgba(255, 140, 51, 0.04) 0%, transparent 50%),
             radial-gradient(ellipse at 50% 80%, rgba(255, 69, 0, 0.03) 0%, transparent 50%);
     }
+
     33% {
         background:
             radial-gradient(ellipse at 60% 30%, rgba(255, 106, 0, 0.06) 0%, transparent 50%),
             radial-gradient(ellipse at 30% 70%, rgba(255, 140, 51, 0.04) 0%, transparent 50%),
             radial-gradient(ellipse at 80% 60%, rgba(255, 69, 0, 0.03) 0%, transparent 50%);
     }
+
     66% {
         background:
             radial-gradient(ellipse at 40% 80%, rgba(255, 106, 0, 0.06) 0%, transparent 50%),
             radial-gradient(ellipse at 70% 40%, rgba(255, 140, 51, 0.04) 0%, transparent 50%),
             radial-gradient(ellipse at 20% 30%, rgba(255, 69, 0, 0.03) 0%, transparent 50%);
     }
+
     100% {
         background:
             radial-gradient(ellipse at 80% 60%, rgba(255, 106, 0, 0.06) 0%, transparent 50%),
@@ -131,13 +134,13 @@ ul {
 
 /* === SECTION BASE === */
 .section {
-    padding: 100px 0;
+    padding: 20px 0 80px;
     position: relative;
 }
 
 .section-header {
     text-align: center;
-    margin-bottom: 64px;
+    margin-bottom: 40px;
 }
 
 .section-label {
@@ -245,9 +248,11 @@ ul {
     z-index: 1001;
 }
 
-.nav-logo-icon {
-    height: 45px;
+.nav-logo-img {
+    height: 50px;
     width: auto;
+    object-fit: contain;
+    mix-blend-mode: lighten;
 }
 
 .nav-links {
@@ -352,10 +357,18 @@ ul {
     animation: fadeInDown 1s ease-out;
 }
 
-.hero-logo-svg {
-    width: 260px;
-    height: auto;
-    filter: drop-shadow(0 0 40px rgba(255, 106, 0, 0.2));
+.hero-brand-text {
+    font-family: var(--font-primary);
+    font-size: clamp(3.5rem, 10vw, 6rem);
+    font-weight: 900;
+    letter-spacing: 8px;
+    background: linear-gradient(135deg, #FF4500, #FF6A00, #FF8C33, #FFD700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 30px rgba(255, 106, 0, 0.25));
+    display: block;
 }
 
 .hero-tagline {
@@ -466,8 +479,17 @@ ul {
 }
 
 @keyframes scrollBounce {
-    0%, 100% { transform: translateY(0); opacity: 1; }
-    50% { transform: translateY(8px); opacity: 0.3; }
+
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(8px);
+        opacity: 0.3;
+    }
 }
 
 .hero-scroll-indicator span {
@@ -863,9 +885,17 @@ ul {
 }
 
 @keyframes successPulse {
-    0% { transform: scale(0); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .booking-success h3 {
@@ -1008,9 +1038,11 @@ a.contact-value:hover {
     gap: 4px;
 }
 
-.footer-logo-svg {
-    height: 40px;
+.footer-logo-img {
+    height: 50px;
     width: auto;
+    object-fit: contain;
+    mix-blend-mode: lighten;
 }
 
 .footer-brand p {
@@ -1116,8 +1148,15 @@ a.contact-value:hover {
 }
 
 @keyframes whatsappPulse {
-    0%, 100% { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4); }
-    50% { box-shadow: 0 4px 30px rgba(37, 211, 102, 0.6), 0 0 0 10px rgba(37, 211, 102, 0.1); }
+
+    0%,
+    100% {
+        box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 4px 30px rgba(37, 211, 102, 0.6), 0 0 0 10px rgba(37, 211, 102, 0.1);
+    }
 }
 
 /* === SCROLL REVEAL ANIMATIONS === */
@@ -1138,6 +1177,7 @@ a.contact-value:hover {
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1149,6 +1189,7 @@ a.contact-value:hover {
         opacity: 0;
         transform: translateY(-30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1172,13 +1213,16 @@ a.contact-value:hover {
         opacity: 0;
         transform: translateY(0) scale(0);
     }
+
     20% {
         opacity: 0.6;
         transform: translateY(-50px) scale(1);
     }
+
     80% {
         opacity: 0.3;
     }
+
     100% {
         opacity: 0;
         transform: translateY(-300px) scale(0.5);
@@ -1198,7 +1242,7 @@ a.contact-value:hover {
 
 @media (max-width: 768px) {
     .section {
-        padding: 80px 0;
+        padding: 16px 0 60px;
     }
 
     /* Mobile Nav */
@@ -1240,8 +1284,8 @@ a.contact-value:hover {
         padding: 100px 20px 60px;
     }
 
-    .hero-logo-svg {
-        width: 200px;
+    .hero-logo-img {
+        width: 240px;
     }
 
     .hero-tagline {

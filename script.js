@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === SCROLL REVEAL ANIMATION ===
     const revealElements = document.querySelectorAll('[data-reveal]');
-    
+
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry, index) => {
             if (entry.isIntersecting) {
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     entry.target.classList.add('revealed');
                 }, delay);
-                
+
                 revealObserver.unobserve(entry.target);
             }
         });
@@ -93,12 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function createParticle() {
         const particle = document.createElement('div');
         particle.classList.add('particle');
-        
+
         const x = Math.random() * 100;
         const size = Math.random() * 4 + 2;
         const duration = Math.random() * 4 + 4;
         const opacity = Math.random() * 0.5 + 0.1;
-        
+
         particle.style.cssText = `
             left: ${x}%;
             bottom: -10px;
@@ -108,9 +108,9 @@ document.addEventListener('DOMContentLoaded', () => {
             animation-delay: ${Math.random() * 3}s;
             opacity: ${opacity};
         `;
-        
+
         particlesContainer.appendChild(particle);
-        
+
         setTimeout(() => {
             particle.remove();
         }, (duration + 3) * 1000);
@@ -172,14 +172,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // === SMOOTH SCROLL FOR ANCHOR LINKS ===
+    const navbarHeight = 70;
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
                 });
             }
         });
@@ -188,13 +190,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // === MICRO INTERACTIONS ===
     // Add ripple effect to buttons
     document.querySelectorAll('.btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', function (e) {
             const ripple = document.createElement('span');
             const rect = this.getBoundingClientRect();
             const size = Math.max(rect.width, rect.height);
             const x = e.clientX - rect.left - size / 2;
             const y = e.clientY - rect.top - size / 2;
-            
+
             ripple.style.cssText = `
                 position: absolute;
                 width: ${size}px;
@@ -207,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 animation: ripple 0.6s ease-out;
                 pointer-events: none;
             `;
-            
+
             this.appendChild(ripple);
             setTimeout(() => ripple.remove(), 600);
         });
@@ -227,22 +229,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === FORM INPUT ANIMATIONS ===
     document.querySelectorAll('.form-group input, .form-group select, .form-group textarea').forEach(input => {
-        input.addEventListener('focus', function() {
+        input.addEventListener('focus', function () {
             this.parentElement.classList.add('focused');
         });
-        input.addEventListener('blur', function() {
+        input.addEventListener('blur', function () {
             this.parentElement.classList.remove('focused');
         });
     });
 
     // === PARALLAX ON MOUSE (Desktop only) ===
     if (window.innerWidth > 768) {
-        const heroLogo = document.querySelector('.hero-logo-svg');
+        const heroLogo = document.querySelector('.hero-logo-img');
         document.querySelector('.hero').addEventListener('mousemove', (e) => {
             const rect = e.currentTarget.getBoundingClientRect();
             const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
             const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
-            
+
             if (heroLogo) {
                 heroLogo.style.transform = `translate(${x * 10}px, ${y * 10}px)`;
             }
@@ -253,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function animateCounter(element, target, duration = 2000) {
         let start = 0;
         const increment = target / (duration / 16);
-        
+
         function update() {
             start += increment;
             if (start < target) {
