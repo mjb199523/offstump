@@ -126,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // === BOOKING FORM ===
     const bookingForm = document.getElementById('bookingForm');
     const bookingSuccess = document.getElementById('bookingSuccess');
+    const submitBtn = document.getElementById('booking-submit');
 
     if (bookingForm) {
         // Set minimum date to today
@@ -135,40 +136,120 @@ document.addEventListener('DOMContentLoaded', () => {
             dateInput.setAttribute('min', today);
         }
 
-        bookingForm.addEventListener('submit', (e) => {
+        bookingForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             // Gather form data
             const formData = new FormData(bookingForm);
             const data = Object.fromEntries(formData.entries());
 
-            // Build email mailto link
-            const subject = encodeURIComponent(`OFFSTUMP Booking Request - ${data.activity}`);
-            const body = encodeURIComponent(
-                `New Booking Request\n\n` +
-                `Name: ${data.name}\n` +
-                `Phone: ${data.phone}\n` +
-                `Email: ${data.email}\n` +
-                `Activity: ${data.activity}\n` +
-                `Date: ${data.date}\n` +
-                `Time: ${data.time}\n` +
-                `Message: ${data.message || 'N/A'}\n`
-            );
+            // Show loading state
+            const originalBtnContent = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <span style="display:inline-flex;align-items:center;gap:8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite;">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    Submitting...
+                </span>
+            `;
 
-            // Open email client
-            window.open(`mailto:offstump26@gmail.com?subject=${subject}&body=${body}`, '_blank');
+            // Add spin animation if not already present
+            if (!document.getElementById('spin-style')) {
+                const spinStyle = document.createElement('style');
+                spinStyle.id = 'spin-style';
+                spinStyle.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+                document.head.appendChild(spinStyle);
+            }
 
-            // Show success message
-            bookingForm.style.display = 'none';
-            bookingSuccess.classList.add('show');
+            try {
+                // Determine API URL — works both locally and deployed
+                const apiBase = window.location.origin;
+                const response = await fetch(`${apiBase}/api/book-slot`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
 
-            // Reset after 5 seconds
-            setTimeout(() => {
-                bookingForm.reset();
-                bookingForm.style.display = 'flex';
-                bookingSuccess.classList.remove('show');
-            }, 5000);
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    // SUCCESS
+                    bookingForm.style.display = 'none';
+                    bookingSuccess.classList.add('show');
+
+                    // Reset form after 5 seconds
+                    setTimeout(() => {
+                        bookingForm.reset();
+                        bookingForm.style.display = 'flex';
+                        bookingSuccess.classList.remove('show');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnContent;
+                    }, 5000);
+                } else {
+                    // VALIDATION ERROR from server
+                    const errorMsg = result.errors ? result.errors.join(', ') : result.message;
+                    showFormError(errorMsg);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnContent;
+                }
+            } catch (error) {
+                console.warn('API unreachable, falling back to mailto:', error.message);
+
+                // FALLBACK: open email if server is not running
+                const subject = encodeURIComponent(`OFFSTUMP Booking Request - ${data.activity}`);
+                const body = encodeURIComponent(
+                    `New Booking Request\n\n` +
+                    `Name: ${data.name}\n` +
+                    `Phone: ${data.phone}\n` +
+                    `Email: ${data.email}\n` +
+                    `Activity: ${data.activity}\n` +
+                    `Date: ${data.date}\n` +
+                    `Time: ${data.time}\n` +
+                    `Message: ${data.message || 'N/A'}\n`
+                );
+                window.open(`mailto:offstump26@gmail.com?subject=${subject}&body=${body}`, '_blank');
+
+                // Still show success
+                bookingForm.style.display = 'none';
+                bookingSuccess.classList.add('show');
+
+                setTimeout(() => {
+                    bookingForm.reset();
+                    bookingForm.style.display = 'flex';
+                    bookingSuccess.classList.remove('show');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnContent;
+                }, 5000);
+            }
         });
+    }
+
+    // Error message helper
+    function showFormError(message) {
+        // Remove existing error if any
+        const existing = document.querySelector('.form-error-msg');
+        if (existing) existing.remove();
+
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'form-error-msg';
+        errorDiv.style.cssText = `
+            background: rgba(255, 59, 48, 0.1);
+            border: 1px solid rgba(255, 59, 48, 0.3);
+            color: #FF6B6B;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+            text-align: center;
+            animation: fadeInUp 0.3s ease-out;
+        `;
+        errorDiv.textContent = message;
+        bookingForm.prepend(errorDiv);
+
+        // Auto-remove after 5 seconds
+        setTimeout(() => errorDiv.remove(), 5000);
     }
 
     // === SMOOTH SCROLL FOR ANCHOR LINKS ===
