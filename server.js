@@ -249,6 +249,9 @@ app.get('/api/health', (req, res) => {
         status: 'running',
         storage: 'JSON file',
         emailConfigured: !!process.env.EMAIL_PASS,
+        emailUser: process.env.EMAIL_USER ? 'set' : 'missing',
+        emailPass: process.env.EMAIL_PASS ? 'set (' + process.env.EMAIL_PASS.length + ' chars)' : 'missing',
+        adminEmail: process.env.ADMIN_EMAIL ? 'set' : 'missing',
         timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
     });
 });
