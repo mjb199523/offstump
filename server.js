@@ -3,7 +3,8 @@
 // Express + JSON File Storage + Nodemailer
 // =============================================
 
-require('dotenv').config();
+// Only load .env file in development (Render injects env vars directly)
+try { require('dotenv').config({ override: false }); } catch (e) { }
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
