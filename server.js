@@ -208,16 +208,20 @@ app.post('/api/book-slot', bookingLimiter, async (req, res) => {
         console.log('✅ Booking saved:', bookingData.id, '-', bookingData.name);
 
         // 4. Send email notification (await it!)
+        let emailStatus = 'not_attempted';
         try {
             await sendAdminNotification(bookingData);
+            emailStatus = 'sent';
         } catch (emailError) {
+            emailStatus = 'failed: ' + emailError.message;
             console.error('⚠️  Email failed:', emailError.message);
-            // Booking still succeeds even if email fails
+            console.error('⚠️  Full error:', JSON.stringify(emailError, Object.getOwnPropertyNames(emailError)));
         }
 
         return res.status(201).json({
             success: true,
             message: 'Booking saved successfully',
+            emailStatus: emailStatus,
             booking: {
                 id: bookingData.id,
                 name: bookingData.name,
