@@ -164,9 +164,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                // Determine API URL — works both locally and deployed
-                const apiBase = window.location.origin;
-                const response = await fetch(`${apiBase}/api/book-slot`, {
+                // API URL: Use deployed backend in production, localhost in dev
+                // ⚠️ UPDATE THIS after deploying to Render!
+                const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? window.location.origin
+                    : 'https://offstump.onrender.com';
+                const response = await fetch(`${API_BASE_URL}/api/book-slot`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
