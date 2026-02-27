@@ -1,47 +1,16 @@
 {
-    "version": 2,
-    "builds": [
+    "rewrites": [
         {
-            "src": "api/**/*.js",
-            "use": "@vercel/node"
+            "source": "/api/book-slot",
+            "destination": "/api/book-slot"
         },
         {
-            "src": "index.html",
-            "use": "@vercel/static"
+            "source": "/api/health",
+            "destination": "/api/health"
         },
         {
-            "src": "styles.css",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "script.js",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "logo.png",
-            "use": "@vercel/static"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "/api/$1"
-        },
-        {
-            "src": "/styles.css",
-            "dest": "/styles.css"
-        },
-        {
-            "src": "/script.js",
-            "dest": "/script.js"
-        },
-        {
-            "src": "/logo.png",
-            "dest": "/logo.png"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/index.html"
+            "source": "/((?!api/).*)",
+            "destination": "/index.html"
         }
     ]
 }
