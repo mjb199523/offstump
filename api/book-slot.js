@@ -7,8 +7,8 @@ const nodemailer = require('nodemailer');
 
 // === EMAIL NOTIFICATION ===
 async function sendAdminNotification(booking) {
-    const emailPass = process.env.EMAIL_PASS;
-    const emailUser = process.env.EMAIL_USER || 'offstump26@gmail.com';
+    const emailPass = (process.env.EMAIL_PASS || '').trim();
+    const emailUser = (process.env.EMAIL_USER || 'offstump26@gmail.com').trim();
 
     if (!emailPass) {
         console.log('⚠️  EMAIL_PASS not set — skipping email notification');
@@ -40,7 +40,7 @@ async function sendAdminNotification(booking) {
 
     const mailOptions = {
         from: `"OFFSTUMP Bookings" <${emailUser}>`,
-        to: process.env.ADMIN_EMAIL || 'offstump26@gmail.com',
+        to: (process.env.ADMIN_EMAIL || 'offstump26@gmail.com').trim(),
         subject: `New Booking: ${booking.name} - ${activityLabels[booking.activity] || booking.activity}`,
         html: `
             <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #1a1a1a; color: #fff; border-radius: 16px; overflow: hidden;">

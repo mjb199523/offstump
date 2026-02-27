@@ -17,10 +17,10 @@ module.exports = (req, res) => {
         success: true,
         status: 'running',
         platform: 'Vercel',
-        emailConfigured: !!process.env.EMAIL_PASS,
-        emailUser: process.env.EMAIL_USER ? 'set' : 'missing',
-        emailPass: process.env.EMAIL_PASS ? 'set (' + process.env.EMAIL_PASS.length + ' chars)' : 'missing',
-        adminEmail: process.env.ADMIN_EMAIL ? 'set' : 'missing',
+        emailConfigured: !!(process.env.EMAIL_PASS || '').trim(),
+        emailUser: (process.env.EMAIL_USER || '').trim() ? 'set' : 'missing',
+        emailPass: (process.env.EMAIL_PASS || '').trim() ? 'set (' + (process.env.EMAIL_PASS || '').trim().length + ' chars)' : 'missing',
+        adminEmail: (process.env.ADMIN_EMAIL || '').trim() ? 'set' : 'missing',
         timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
     });
 };
