@@ -1,15 +1,15 @@
 {
     "rewrites": [
         {
-            "source": "/api/book-slot",
-            "destination": "/api/book-slot"
+            "source": "/admin/analytics",
+            "destination": "/admin/analytics.html"
         },
         {
-            "source": "/api/health",
-            "destination": "/api/health"
+            "source": "/api/(.*)",
+            "destination": "/api/$1"
         },
         {
-            "source": "/((?!api/).*)",
+            "source": "/((?!api/|admin/analytics.html|styles.css|script.js|logo.png|favicon.ico).*)",
             "destination": "/index.html"
         }
     ]
