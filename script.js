@@ -4,6 +4,40 @@
    ============================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // === RIBBON BANNER ===
+    const ribbonBanner = document.getElementById('ribbonBanner');
+    const ribbonClose = document.getElementById('ribbonClose');
+
+    if (ribbonBanner && ribbonClose) {
+        const isRibbonClosed = sessionStorage.getItem('ribbonClosed');
+        if (!isRibbonClosed) {
+            // Show ribbon with slightly delayed slide down
+            setTimeout(() => {
+                ribbonBanner.classList.add('show');
+                const ribbonHeight = ribbonBanner.offsetHeight;
+                document.documentElement.style.setProperty('--ribbon-height', `${ribbonHeight}px`);
+
+                // Account for ribbon in scroll calculations if page is not at top
+                if (window.scrollY > 0) {
+                    window.scrollBy(0, ribbonHeight);
+                }
+            }, 300);
+
+            // Handle window resize dynamically adjusting the gap
+            window.addEventListener('resize', () => {
+                if (ribbonBanner.classList.contains('show')) {
+                    document.documentElement.style.setProperty('--ribbon-height', `${ribbonBanner.offsetHeight}px`);
+                }
+            });
+        }
+
+        ribbonClose.addEventListener('click', () => {
+            ribbonBanner.classList.remove('show');
+            document.documentElement.style.setProperty('--ribbon-height', '0px');
+            sessionStorage.setItem('ribbonClosed', 'true');
+        });
+    }
+
     // === NAVBAR SCROLL EFFECT ===
     const navbar = document.getElementById('navbar');
     const navToggle = document.getElementById('navToggle');
