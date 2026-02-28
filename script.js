@@ -50,8 +50,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentScroll = window.pageYOffset;
         if (currentScroll > 50) {
             navbar.classList.add('scrolled');
+
+            // Hide ribbon on scroll down
+            if (ribbonBanner && ribbonBanner.classList.contains('show')) {
+                ribbonBanner.classList.remove('show');
+                document.documentElement.style.setProperty('--ribbon-height', '0px');
+            }
         } else {
             navbar.classList.remove('scrolled');
+
+            // Show ribbon when back at top (if not manually closed)
+            if (ribbonBanner && !sessionStorage.getItem('ribbonClosed')) {
+                ribbonBanner.classList.add('show');
+                document.documentElement.style.setProperty('--ribbon-height', `${ribbonBanner.offsetHeight}px`);
+            }
         }
         lastScroll = currentScroll;
     });
