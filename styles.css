@@ -795,6 +795,97 @@ ul {
     opacity: 0.3;
 }
 
+/* === WHATSAPP CTA === */
+.whatsapp-cta .cta-wrapper {
+    padding: 60px 40px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255, 106, 0, 0.05), rgba(37, 211, 102, 0.05));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Fallback soft border matching theme */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add a subtle green glow pulse backlighting behind the whole wrapper */
+.whatsapp-cta .cta-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(37, 211, 102, 0.15) 0%, transparent 60%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: pulseGlowBg 4s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlowBg {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 1;
+    }
+}
+
+.whatsapp-cta .cta-content {
+    position: relative;
+    z-index: 1;
+}
+
+.whatsapp-cta .cta-title {
+    font-family: var(--font-primary);
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #ffffff, #25D366);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.whatsapp-cta .cta-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 32px;
+}
+
+.btn-whatsapp {
+    background: linear-gradient(135deg, #25D366, #1da851);
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+    border: none;
+    font-size: 1.05rem;
+}
+
+.btn-whatsapp:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5);
+    background: linear-gradient(135deg, #1da851, #128C7E);
+    color: #ffffff;
+    /* keep white */
+}
+
+.whatsapp-btn-icon {
+    margin-right: 8px;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+}
+
+@media (max-width: 768px) {
+    .whatsapp-cta .cta-wrapper {
+        padding: 40px 24px;
+    }
+
+    .whatsapp-cta .cta-title {
+        font-size: 1.8rem;
+    }
+}
+
 /* === SERVICES / WHAT WE OFFER === */
 .services-grid {
     display: grid;
