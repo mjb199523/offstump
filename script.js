@@ -4,6 +4,59 @@
    ============================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    // === ANALYTICS TRACKING ===
+    const trackEvent = async (eventName, metadata = {}) => {
+        try {
+            await fetch('/api/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event_name: eventName,
+                    page_path: window.location.pathname,
+                    referrer: document.referrer || '',
+                    device: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
+                    metadata
+                })
+            });
+        } catch (e) {
+            console.error('Tracking failed', e);
+        }
+    };
+
+    // 1. Track Page View
+    trackEvent('page_view');
+
+    // 2. Track WhatsApp Clicks
+    document.querySelectorAll('a[href*="whatsapp.com"], a[href*="wa.me"]').forEach(el => {
+        el.addEventListener('click', () => {
+            trackEvent('whatsapp_channel_click', { url: el.href });
+        });
+    });
+
+    // 3. Track Call Clicks
+    document.querySelectorAll('a[href^="tel:"]').forEach(el => {
+        el.addEventListener('click', () => {
+            trackEvent('call_click', { phone: el.href });
+        });
+    });
+
+    // 4. Track Email Clicks
+    document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
+        el.addEventListener('click', () => {
+            trackEvent('email_click', { email: el.href });
+        });
+    });
+
+    // 5. Track Service Clicks
+    document.querySelectorAll('.service-card .service-link').forEach(el => {
+        el.addEventListener('click', (e) => {
+            const card = e.target.closest('.service-card');
+            const serviceName = card ? card.querySelector('h3').innerText : 'unknown';
+            trackEvent('service_click', { service: serviceName });
+        });
+    });
+
     // === RIBBON BANNER ===
     const ribbonBanner = document.getElementById('ribbonBanner');
     const ribbonClose = document.getElementById('ribbonClose');
@@ -221,6 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.ok && result.success) {
                     // SUCCESS
+                    trackEvent('contact_form_submit', { activity: data.activity });
                     bookingForm.style.display = 'none';
                     bookingSuccess.classList.add('show');
 
