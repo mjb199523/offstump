@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - OFFSTUMP Admin</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --orange-primary: #FF6A00;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+        }
+
+        .logout-btn {
+            background: transparent;
+            color: #FF6B6B;
+            border: 1px solid #FF6B6B;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        @media(max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 106, 0, 0.2);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .input,
+        .select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background: var(--orange-primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #E65C00;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            display: none;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            color: var(--text-secondary);
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .badge.active {
+            background: rgba(37, 211, 102, 0.2);
+            color: #25D366;
+        }
+
+        .badge.inactive {
+            background: rgba(255, 107, 107, 0.2);
+            color: #FF6B6B;
+        }
+
+        .toggle-btn {
+            background: transparent;
+            border: 1px solid var(--orange-primary);
+            color: var(--orange-primary);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 106, 0, 0.1);
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: 1px solid #FF6B6B;
+            color: #FF6B6B;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 106, 0, 0.2);
+            padding-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255, 106, 0, 0.1);
+        }
+
+        .tab-btn.active {
+            color: white;
+            background: var(--orange-primary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header" id="mainHeader" style="margin-bottom: 20px; border-bottom: none; display: flex;">
+            <div>
+                <h1 id="pageTitle">Manage Users</h1>
+            </div>
+            <button class="logout-btn" id="logoutBtn" style="display: inline-block;">Log out</button>
+        </div>
+
+        <div class="tabs" id="navTabs" style="display: flex;">
+            <a href="/admin/users" class="tab-btn active" id="usersTab">Manage Users</a>
+            <a href="/admin/analytics" class="tab-btn" id="analyticsTab">Analytics Dashboard</a>
+            <a href="/premium" class="tab-btn">Premium Services</a>
+        </div>
+
+        <div id="loadingIndicator"
+            style="padding: 100px 40px; text-align: center; color: var(--text-secondary); min-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div class="loader-spinner"
+                style="width: 40px; height: 40px; border: 4px solid rgba(255, 106, 0, 0.1); border-top: 4px solid var(--orange-primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;">
+            </div>
+            <style>
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+            </style>
+            <h2>Loading secure details...</h2>
+        </div>
+
+        <div id="main-content" style="display:none; min-height: 400px;">
+            <div class="grid">
+                <div class="card">
+                    <h3 style="margin-top:0;">Create New User</h3>
+                    <div class="message" id="formMsg"></div>
+                    <form id="createUserForm">
+                        <div class="input-group">
+                            <label>Email</label>
+                            <input type="email" id="email" class="input" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Password</label>
+                            <input type="text" id="password" class="input" required minlength="6">
+                        </div>
+                        <div class="input-group">
+                            <label>Role</label>
+                            <select id="role" class="select">
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn" id="createBtn" style="margin-bottom: 25px;">Create
+                            Account</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-top:0; margin-bottom: 20px;">Existing Users</h3>
+
+                    <div style="max-height: 400px; overflow-y: auto; overflow-x: auto; padding-right: 5px;">
+                        <table style="width: 100%; border-collapse: separate; border-spacing: 0;">
+                            <thead style="position: sticky; top: 0; background: var(--bg-card); z-index: 1;">
+                                <tr>
+                                    <th
+                                        style="padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); background: var(--bg-primary);">
+                                        Email</th>
+                                    <th
+                                        style="padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); background: var(--bg-primary);">
+                                        Role</th>
+                                    <th
+                                        style="padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); background: var(--bg-primary);">
+                                        Status</th>
+                                    <th
+                                        style="padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); background: var(--bg-primary);">
+                                        Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="4" style="text-align: center;">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/auth-client.js"></script>
+    <script>
+        let sessionToken = '';
+
+        async function fetchUsers() {
+            try {
+                const res = await fetch('/api/admin/users', { headers: { 'Authorization': `Bearer ${sessionToken}` } });
+                const data = await res.json();
+
+                const tbody = document.getElementById('usersTableBody');
+                if (data.users) {
+                    tbody.innerHTML = data.users.map(u => `
+                        <tr>
+                            <td>${u.email}</td>
+                            <td>${u.role}</td>
+                            <td><span class="badge ${u.is_active ? 'active' : 'inactive'}">${u.is_active ? 'Active' : 'Inactive'}</span></td>
+                            <td>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="toggle-btn" onclick="toggleStatus('${u.id}', ${u.is_active})">
+                                        ${u.is_active ? 'Deactivate' : 'Activate'}
+                                    </button>
+                                    <button class="delete-btn" onclick="deleteUser('${u.id}', '${u.email}')">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="4" style="color:red">Failed to load</td></tr>';
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        window.toggleStatus = async (id, currentStatus) => {
+            if (!confirm(`Are you sure you want to ${currentStatus ? 'deactivate' : 'activate'} this user?`)) return;
+
+            await fetch('/api/admin/users', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${sessionToken}` },
+                body: JSON.stringify({ id, is_active: !currentStatus })
+            });
+            fetchUsers();
+        };
+
+        window.deleteUser = async (id, email) => {
+            if (!confirm(`CRITICAL WARNING: Are you absolutely sure you want to PERMANENTLY DELETE the user "${email}"? This action cannot be undone.`)) return;
+
+            try {
+                const res = await fetch('/api/admin/users', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${sessionToken}` },
+                    body: JSON.stringify({ id })
+                });
+
+                const data = await res.json();
+                if (!res.ok) {
+                    alert('Error: ' + (data.error || 'Failed to delete user'));
+                } else {
+                    fetchUsers(); // Refresh the list
+                }
+            } catch (err) {
+                alert('Connection error: Failed to delete user.');
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const client = await window.initSupabase();
+            if (!client) return;
+
+            const { data: { session }, error } = await client.auth.getSession();
+            if (!session || error) {
+                window.location.href = '/auth/login';
+                return;
+            }
+
+            try {
+                const profile = await window.getCachedProfile(session.access_token);
+
+                if (!profile || profile.role !== 'admin') {
+                    // Safety check: Users page should ONLY be for admins
+                    window.location.href = '/auth/unauthorized';
+                    return;
+                }
+
+                // UI Logic for consistency
+                document.getElementById('pageTitle').textContent = 'Manage Users';
+                document.getElementById('mainHeader').style.display = 'flex';
+                document.getElementById('navTabs').style.display = 'flex';
+                document.getElementById('usersTab').style.display = 'inline-block';
+                document.getElementById('analyticsTab').style.display = 'inline-block';
+
+                sessionToken = session.access_token;
+
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                document.getElementById('logoutBtn').style.display = 'inline-block';
+
+                fetchUsers();
+            } catch (err) {
+                console.error("Auth check failed", err);
+                window.location.href = '/auth/login';
+            }
+
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                await client.auth.signOut();
+                window.clearSessionCache();
+                window.location.href = '/auth/login';
+            });
+
+            document.getElementById('createUserForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('createBtn');
+                const msg = document.getElementById('formMsg');
+                btn.disabled = true;
+                msg.style.display = 'none';
+
+                const rawResponse = await fetch('/api/admin/create-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${sessionToken}` },
+                    body: JSON.stringify({
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value,
+                        role: document.getElementById('role').value
+                    })
+                });
+
+                const reqData = await rawResponse.json();
+
+                if (rawResponse.ok) {
+                    msg.textContent = 'User created successfully!';
+                    msg.style.background = 'rgba(37, 211, 102, 0.2)';
+                    msg.style.color = '#25D366';
+                    msg.style.display = 'block';
+                    document.getElementById('createUserForm').reset();
+                    fetchUsers();
+                } else {
+                    msg.textContent = reqData.error || 'Failed to create user';
+                    msg.style.background = 'rgba(255, 107, 107, 0.2)';
+                    msg.style.color = '#FF6B6B';
+                    msg.style.display = 'block';
+                }
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+
+</html>

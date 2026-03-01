@@ -11,7 +11,7 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg-primary: #0a0a0a;
@@ -40,6 +40,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding-bottom: 20px;
             margin-bottom: 40px;
         }
 
@@ -49,53 +50,56 @@
             margin: 0;
         }
 
-        /* Login Form */
-        .login-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 80vh;
-        }
-
-        .login-card {
-            background: var(--bg-card);
-            padding: 40px;
-            border-radius: 16px;
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
-            border: 1px solid rgba(255, 106, 0, 0.2);
-        }
-
-        .input {
-            width: 100%;
-            padding: 12px;
-            margin: 20px 0;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-
-        .btn {
-            background: var(--orange-primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
+        .logout-btn {
+            background: transparent;
+            color: #FF6B6B;
+            border: 1px solid #FF6B6B;
+            padding: 8px 16px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            width: 100%;
+            transition: all 0.3s;
+            white-space: nowrap;
         }
 
-        .btn:hover {
-            background: #E65C00;
+        .logout-btn:hover {
+            background: rgba(255, 107, 107, 0.1);
         }
 
-        /* Dashboard Layout */
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 106, 0, 0.2);
+            padding-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255, 106, 0, 0.1);
+        }
+
+        .tab-btn.active {
+            color: white;
+            background: var(--orange-primary);
+        }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -182,57 +186,85 @@
             color: var(--text-primary);
             font-size: 0.9rem;
         }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
 <body>
     <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
-
+    <script src="/auth-client.js"></script>
+    <script>
+        // Optimization: Native browser bundle (No Babel)
+        const { useState, useEffect, useRef, createElement: el, Fragment } = React;
         const COLORS = ['#FF6A00', '#FF8C33', '#CC5500', '#FFD700', '#25D366'];
 
         function App() {
-            const [password, setPassword] = useState('');
-            const [authenticated, setAuthenticated] = useState(false);
-            const [loading, setLoading] = useState(false);
+            const [loading, setLoading] = useState(true);
             const [error, setError] = useState(null);
             const [data, setData] = useState(null);
+            const [title, setTitle] = useState('Analytics');
 
             const lineChartRef = useRef(null);
             const barChartRef = useRef(null);
             const lineInstance = useRef(null);
             const barInstance = useRef(null);
 
-            const handleLogin = async (e) => {
-                e.preventDefault();
-                setLoading(true);
-                setError(null);
-                try {
-                    const res = await fetch('/api/analytics', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ password })
-                    });
-                    const result = await res.json();
-
-                    if (res.ok) {
-                        setAuthenticated(true);
-                        setData(result);
-                    } else {
-                        setError(result.error || 'Login failed');
-                    }
-                } catch (err) {
-                    setError('Network error');
-                }
-                setLoading(false);
-            };
-
-            // Initialize Charts
             useEffect(() => {
-                if (authenticated && data) {
-                    // Line Chart
+                const init = async () => {
+                    const client = await window.initSupabase();
+                    if (!client) return;
+
+                    const { data: { session } } = await client.auth.getSession();
+                    if (!session) {
+                        window.location.href = '/auth/login';
+                        return;
+                    }
+
+                    try {
+                        // Optimization: Check profile (potentially from cache) AND fetch analytics in parallel
+                        const [profile, analyticsRes] = await Promise.all([
+                            window.getCachedProfile(session.access_token),
+                            fetch('/api/analytics', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${session.access_token}`
+                                }
+                            })
+                        ]);
+
+                        if (!profile || profile.role !== 'admin') {
+                            window.location.href = '/auth/unauthorized';
+                            return;
+                        }
+
+                        setTitle('Analytics');
+                        if (analyticsRes.ok) {
+                            const result = await analyticsRes.json();
+                            setData(result);
+                        } else {
+                            setError('Dashboard load failed');
+                        }
+                    } catch (err) {
+                        setError('Connection failed');
+                    }
+                    setLoading(false);
+                };
+                init();
+            }, []);
+
+            useEffect(() => {
+                if (data) {
                     if (lineChartRef.current) {
                         if (lineInstance.current) lineInstance.current.destroy();
                         lineInstance.current = new Chart(lineChartRef.current, {
@@ -259,8 +291,6 @@
                             }
                         });
                     }
-
-                    // Bar Chart
                     if (barChartRef.current) {
                         if (barInstance.current) barInstance.current.destroy();
                         barInstance.current = new Chart(barChartRef.current, {
@@ -268,7 +298,7 @@
                             data: {
                                 labels: data.serviceChartData.map(d => d.name),
                                 datasets: [{
-                                    label: 'Service Clicks',
+                                    label: 'Clicks',
                                     data: data.serviceChartData.map(d => d.value),
                                     backgroundColor: data.serviceChartData.map((_, i) => COLORS[i % COLORS.length]),
                                     borderRadius: 4
@@ -286,109 +316,73 @@
                         });
                     }
                 }
-            }, [authenticated, data]);
+            }, [data]);
 
-            if (!authenticated) {
-                return (
-                    <div className="container login-wrapper">
-                        <div className="login-card">
-                            <h2 style={{ fontFamily: 'Outfit, sans-serif' }}>Analytics Login</h2>
-                            <form onSubmit={handleLogin}>
-                                <input
-                                    type="password"
-                                    className="input"
-                                    placeholder="Enter Admin Password"
-                                    value={password}
-                                    onChange={e => setPassword(e.target.value)}
-                                    required
-                                />
-                                {error && <p style={{ color: '#FF6B6B', margin: '0 0 15px 0' }}>{error}</p>}
-                                <button type="submit" className="btn" disabled={loading}>
-                                    {loading ? 'Authenticating...' : 'View Dashboard'}
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                );
-            }
+            const handleLogout = async () => {
+                const client = await window.initSupabase();
+                await client.auth.signOut();
+                window.clearSessionCache();
+                window.location.href = '/auth/login';
+            };
 
-            if (!data) return <div className="container">Loading Dashboard...</div>;
-
-            return (
-                <div className="container">
-                    <div className="header">
-                        <h1>Analytics Dashboard</h1>
-                        <button className="btn" style={{ width: 'auto' }} onClick={() => setAuthenticated(false)}>Logout</button>
-                    </div>
-
-                    <div className="grid">
-                        <div className="card">
-                            <h3>Events Today</h3>
-                            <p className="value">{data.todayEvents}</p>
-                        </div>
-                        <div className="card">
-                            <h3>Events (7 Days)</h3>
-                            <p className="value">{data.sevenDayEvents}</p>
-                        </div>
-                        <div className="card">
-                            <h3>Top Service</h3>
-                            <p className="value" style={{ fontSize: '1.8rem', paddingTop: '10px' }}>{data.topService || 'N/A'}</p>
-                        </div>
-                        <div className="card">
-                            <h3>WhatsApp Clicks</h3>
-                            <p className="value" style={{ color: '#25D366' }}>{data.whatsappClicks}</p>
-                        </div>
-                    </div>
-
-                    <div className="charts-grid">
-                        <div className="chart-container">
-                            <h2>Events (Last 14 Days)</h2>
-                            <div style={{ position: 'relative', height: '300px' }}>
-                                <canvas ref={lineChartRef}></canvas>
-                            </div>
-                        </div>
-                        <div className="chart-container">
-                            <h2>Service Interest</h2>
-                            <div style={{ position: 'relative', height: '300px' }}>
-                                <canvas ref={barChartRef}></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="table-container">
-                        <h2>Recent Events (50)</h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Event Name</th>
-                                    <th>Page Path</th>
-                                    <th>Device</th>
-                                    <th>Time</th>
-                                    <th>Metadata</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data.recentEvents.map(evt => (
-                                    <tr key={evt.id}>
-                                        <td>{evt.event_name}</td>
-                                        <td>{evt.page_path}</td>
-                                        <td>{evt.device}</td>
-                                        <td>{new Date(evt.created_at).toLocaleString()}</td>
-                                        <td>{evt.metadata ? JSON.stringify(evt.metadata) : '-'}</td>
-                                    </tr>
-                                ))}
-                                {data.recentEvents.length === 0 && (
-                                    <tr><td colSpan="5">No recent events found.</td></tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            return el('div', { className: 'container' },
+                el('div', { className: 'header', style: { marginBottom: '20px' } },
+                    el('h1', null, title),
+                    el('button', { className: 'logout-btn', style: { display: 'inline-block' }, onClick: handleLogout }, 'Log out')
+                ),
+                el('div', { className: 'tabs', style: { display: 'flex' } },
+                    el('a', { href: '/admin/users', className: 'tab-btn' }, 'Manage Users'),
+                    el('a', { href: '/admin/analytics', className: 'tab-btn active' }, 'Analytics Dashboard'),
+                    el('a', { href: '/premium', className: 'tab-btn' }, 'Premium Services')
+                ),
+                loading ? el('div', { style: { padding: '100px 40px', textAlign: 'center', color: 'rgba(255, 255, 255, 0.7)', minHeight: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' } },
+                    el('div', { style: { width: '40px', height: '40px', border: '4px solid rgba(255, 106, 0, 0.1)', borderTop: '4px solid #FF6A00', borderRadius: '50%', animation: 'spin 1s linear infinite', marginBottom: '20px' } }),
+                    el('style', null, '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }'),
+                    el('h2', null, 'Loading secure details...')
+                ) : null,
+                error ? el('div', { style: { padding: '40px', textAlign: 'center', color: '#FF6B6B', minHeight: '400px' } },
+                    el('h2', null, error)
+                ) : null,
+                (!loading && data) ? el('div', { style: { minHeight: '400px' } },
+                    el('div', { className: 'grid' },
+                        el('div', { className: 'card' }, el('h3', null, 'Events Today'), el('p', { className: 'value' }, data.todayEvents)),
+                        el('div', { className: 'card' }, el('h3', null, 'Events (7 Days)'), el('p', { className: 'value' }, data.sevenDayEvents)),
+                        el('div', { className: 'card' }, el('h3', null, 'Top Service'), el('p', { className: 'value', style: { fontSize: '1.8rem', paddingTop: '10px' } }, data.topService || 'N/A')),
+                        el('div', { className: 'card' }, el('h3', null, 'WhatsApp Clicks'), el('p', { className: 'value', style: { color: '#25D366' } }, data.whatsappClicks))
+                    ),
+                    el('div', { className: 'charts-grid' },
+                        el('div', { className: 'chart-container' },
+                            el('h2', null, 'Events (Last 14 Days)'),
+                            el('div', { style: { position: 'relative', height: '300px' } }, el('canvas', { ref: lineChartRef }))
+                        ),
+                        el('div', { className: 'chart-container' },
+                            el('h2', null, 'Service Interest'),
+                            el('div', { style: { position: 'relative', height: '300px' } }, el('canvas', { ref: barChartRef }))
+                        )
+                    ),
+                    el('div', { className: 'table-container' },
+                        el('h2', null, 'Recent Events (50)'),
+                        el('table', null,
+                            el('thead', null, el('tr', null, el('th', null, 'Event Name'), el('th', null, 'Page Path'), el('th', null, 'Device'), el('th', null, 'Time'), el('th', null, 'Metadata'))),
+                            el('tbody', null,
+                                data.recentEvents.length > 0 ? data.recentEvents.map(evt =>
+                                    el('tr', { key: evt.id },
+                                        el('td', null, evt.event_name),
+                                        el('td', null, evt.page_path),
+                                        el('td', null, evt.device),
+                                        el('td', null, new Date(evt.created_at).toLocaleString()),
+                                        el('td', null, evt.metadata ? JSON.stringify(evt.metadata) : '-')
+                                    )
+                                ) : el('tr', null, el('td', { colSpan: 5 }, 'No recent events found.'))
+                            )
+                        )
+                    )
+                ) : null
             );
         }
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        root.render(el(App));
     </script>
 </body>
 

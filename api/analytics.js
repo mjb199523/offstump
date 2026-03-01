@@ -1,4 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(process.cwd(), '.env.local') });
 
 module.exports = async (req, res) => {
     // Basic CORS
@@ -15,13 +17,9 @@ module.exports = async (req, res) => {
     }
 
     try {
-        // Authenticate request using password from env
-        const { password } = req.body;
-        const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-
-        if (!password || !ADMIN_PASSWORD || password !== ADMIN_PASSWORD) {
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
+        // Authenticate request using Supabase JWT
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) return res.status(401).json({ error: 'No token' });
 
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -31,6 +29,14 @@ module.exports = async (req, res) => {
         }
 
         const supabase = createClient(supabaseUrl, supabaseKey);
+
+        const { data: { user }, error: authErr } = await supabase.auth.getUser(token);
+        if (authErr || !user) return res.status(401).json({ error: 'Unauthorized' });
+
+        const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+        if (!profile || profile.role !== 'admin') {
+            return res.status(403).json({ error: 'Forbidden' });
+        }
 
         // Compute dates for filtering
         const now = new Date();

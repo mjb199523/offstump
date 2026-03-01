@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Admin {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  role         Role     @default(STAFF)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Customer {
+  id             String    @id @default(uuid())
+  fullName       String
+  phoneNumber    String    @unique
+  email          String?
+  gender         Gender?
+  dateOfBirth    DateTime?
+  address        String?
+  notes          String?
+  source         Source    @default(WALK_IN)
+  
+  // These fields can be physically stored and updated via triggers/hooks
+  // or computed on the fly. Here we store them for easy querying ("auto-calculate" logic will be in services)
+  totalVisits     Int      @default(0)
+  totalMoneySpent Float    @default(0)
+  lastVisitDate   DateTime?
+
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  bookings       Booking[]
+
+  @@index([phoneNumber])
+}
+
+model Service {
+  id           String    @id @default(uuid())
+  name         String
+  pricePerHour Float
+  description  String?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  bookings     Booking[]
+}
+
+model Booking {
+  id           String        @id @default(uuid())
+  customer     Customer      @relation(fields: [customerId], references: [id])
+  customerId   String
+  service      Service       @relation(fields: [serviceId], references: [id])
+  serviceId    String
+  
+  date         DateTime      // Represents the day
+  startTime    DateTime      // Exact start time
+  endTime      DateTime      // Exact end time
+  
+  amountPaid   Float
+  paymentMode  PaymentMode   @default(CASH)
+  status       BookingStatus @default(CONFIRMED)
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([date])
+  @@index([customerId])
+  @@index([serviceId])
+}
+
+enum Role {
+  ADMIN
+  STAFF
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum Source {
+  WALK_IN
+  INSTAGRAM
+  REFERRAL
+  WEBSITE
+  OTHER
+}
+
+enum PaymentMode {
+  CASH
+  UPI
+  CARD
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}

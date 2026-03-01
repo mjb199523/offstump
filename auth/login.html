@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - OFFSTUMP</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --orange-primary: #FF6A00;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 106, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-card h2 {
+            font-family: 'Outfit', sans-serif;
+            margin: 0 0 24px 0;
+            font-size: 1.8rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .input:focus {
+            border-color: var(--orange-primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 106, 0, 0.2);
+        }
+
+        .btn {
+            background: var(--orange-primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #E65C00;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .error {
+            color: #FF6B6B;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        @keyframes spinner {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, .3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spinner .6s linear infinite;
+            vertical-align: middle;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--orange-primary);
+        }
+
+        .login-logo {
+            height: 40px;
+            margin-bottom: 20px;
+            mix-blend-mode: lighten;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-card">
+        <a href="/"><img src="/logo.png" alt="OFFSTUMP" class="login-logo"></a>
+        <h2>Welcome Back</h2>
+        <div class="error" id="errorMsg"></div>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" class="input" required autocomplete="email" />
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="input" required autocomplete="current-password" />
+            </div>
+            <button type="submit" class="btn" id="loginBtn">Login</button>
+        </form>
+        <a href="/" class="back-link">← Back to main page</a>
+    </div>
+    </div>
+
+    <script src="/auth-client.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await window.initSupabase();
+            const client = window.supabaseClient;
+
+            if (!client) {
+                document.getElementById('loginBtn').disabled = true;
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.textContent = '❌ Supabase is not configured. Please add .env.local with your Supabase keys.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Check if already logged in securely
+            const { data: { session } } = await client.auth.getSession();
+            if (session) {
+                const res = await fetch('/api/me', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
+                const { profile } = await res.json();
+                if (profile && profile.role === 'admin') window.location.href = '/admin/users';
+                else window.location.href = '/premium';
+            }
+
+            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const btn = document.getElementById('loginBtn');
+                const errorMsg = document.getElementById('errorMsg');
+
+                btn.disabled = true;
+                btn.textContent = 'Authenticating...';
+                errorMsg.style.display = 'none';
+
+                const { data, error } = await client.auth.signInWithPassword({ email, password });
+
+                if (error) {
+                    if (error.message === 'Failed to fetch') {
+                        errorMsg.innerHTML = '❌ Network Error: Failed to reach your Supabase database.<br><br><small>1. Your Supabase project might be <b>Paused</b> (log into supabase.com to reactivate it).<br>2. Your URL in <code>.env.local</code> might be a fake placeholder string.</small>';
+                    } else {
+                        errorMsg.textContent = error.message;
+                    }
+                    errorMsg.style.display = 'block';
+                    btn.disabled = false;
+                    btn.innerHTML = 'Login';
+                } else {
+                    btn.innerHTML = '<span class="spinner"></span>Verifying Role...';
+                    const res = await fetch('/api/me', { headers: { 'Authorization': `Bearer ${data.session.access_token}` } });
+                    const { profile, error: apiErr } = await res.json();
+
+                    if (apiErr || !profile || profile.is_active === false) {
+                        await client.auth.signOut();
+                        errorMsg.textContent = "Your account is deactivated. Contact Admin.";
+                        errorMsg.style.display = 'block';
+                        btn.disabled = false;
+                        btn.innerHTML = 'Login';
+                        return;
+                    }
+
+                    if (profile.role === 'admin') {
+                        window.location.href = '/admin/users';
+                    } else {
+                        window.location.href = '/premium';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

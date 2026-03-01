@@ -1,15 +1,39 @@
 {
+    "cleanUrls": true,
+    "redirects": [
+        {
+            "source": "/dashboard",
+            "destination": "/crm/dashboard",
+            "permanent": false
+        }
+    ],
     "rewrites": [
         {
             "source": "/admin/analytics",
             "destination": "/admin/analytics.html"
         },
         {
+            "source": "/admin/users",
+            "destination": "/admin/users.html"
+        },
+        {
+            "source": "/auth/login",
+            "destination": "/auth/login.html"
+        },
+        {
+            "source": "/auth/unauthorized",
+            "destination": "/auth/unauthorized.html"
+        },
+        {
+            "source": "/premium",
+            "destination": "/premium.html"
+        },
+        {
             "source": "/api/(.*)",
             "destination": "/api/$1"
         },
         {
-            "source": "/((?!api/|admin/analytics.html|styles.css|script.js|logo.png|favicon.ico).*)",
+            "source": "/((?!api/|bmi(?:/.*)?|crm(?:/.*)?|_next(?:/.*)?|admin/analytics.html|admin/users.html|auth/login.html|auth/unauthorized.html|premium.html|styles.css|script.js|logo.png|logo.jpeg|favicon.ico|auth-client.js).*)",
             "destination": "/index.html"
         }
     ]

@@ -436,6 +436,23 @@ ul {
     color: var(--orange-primary);
 }
 
+.nav-links li a.nav-login-btn {
+    background: linear-gradient(135deg, var(--orange-primary), var(--orange-light));
+    color: white;
+    padding: 8px 24px;
+    margin-left: 10px;
+    border-radius: 50px;
+    font-weight: 700;
+    box-shadow: 0 4px 15px var(--orange-glow);
+}
+
+.nav-links li a.nav-login-btn:hover {
+    background: linear-gradient(135deg, var(--gold), #ffcc00);
+    color: var(--bg-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px var(--orange-glow-strong);
+}
+
 /* Mobile Nav Toggle */
 .nav-toggle {
     display: none;

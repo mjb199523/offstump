@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Features - OFFSTUMP</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        try {
+            const cached = sessionStorage.getItem('offstump_profile');
+            if (cached) {
+                const pa = JSON.parse(cached);
+                if (pa && pa.profile && pa.profile.role === 'admin') {
+                    document.documentElement.classList.add('is-admin');
+                }
+            }
+        } catch (e) { }
+    </script>
+    <style>
+        html:not(.is-admin) #usersTab,
+        html:not(.is-admin) #analyticsTab {
+            display: none !important;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --orange-primary: #FF6A00;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+        }
+
+        .logout-btn {
+            background: transparent;
+            color: #FF6B6B;
+            border: 1px solid #FF6B6B;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 106, 0, 0.2);
+            padding-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255, 106, 0, 0.1);
+        }
+
+        .tab-btn.active {
+            color: white;
+            background: var(--orange-primary);
+        }
+
+        .premium-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .premium-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 106, 0, 0.2);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .premium-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 106, 0, 0.15);
+        }
+
+        .premium-card h3 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--orange-primary);
+            margin: 0 0 16px 0;
+            font-size: 1.5rem;
+        }
+
+        .premium-card p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .premium-btn {
+            background: var(--orange-primary);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+
+        .premium-btn:hover {
+            background: #E65C00;
+        }
+
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header" id="mainHeader" style="margin-bottom: 20px; border-bottom: none; display: flex;">
+            <div>
+                <h1 id="pageTitle">Premium Services</h1>
+            </div>
+            <button class="logout-btn" id="logoutBtn" style="display: inline-block;">Log out</button>
+        </div>
+
+        <div class="tabs" id="navTabs" style="display: flex;">
+            <a href="/admin/users" class="tab-btn" id="usersTab">Manage Users</a>
+            <a href="/admin/analytics" class="tab-btn" id="analyticsTab">Analytics Dashboard</a>
+            <a href="/premium" class="tab-btn active">Premium Services</a>
+        </div>
+
+        <div id="loadingIndicator"
+            style="padding: 100px 40px; text-align: center; color: rgba(255, 255, 255, 0.7); min-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div class="loader-spinner"
+                style="width: 40px; height: 40px; border: 4px solid rgba(255, 106, 0, 0.1); border-top: 4px solid var(--orange-primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;">
+            </div>
+            <style>
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+            </style>
+            <h2>Loading secure details...</h2>
+        </div>
+
+        <div id="main-content" style="display: none; min-height: 400px;">
+            <div class="premium-grid">
+                <div class="premium-card">
+                    <h3>BMI Calculator Insight</h3>
+                    <p>Track your health metrics seamlessly using our custom developed BMI platform built exclusively
+                        for
+                        OFFSTUMP tracking.</p>
+                    <!-- Target blank to open in new tab -->
+                    <a href="#" target="_blank" class="premium-btn" id="bmi-link">Open BMI Tool</a>
+                </div>
+
+                <div class="premium-card" id="crm-card" style="display: none;">
+                    <h3>CRM Tool</h3>
+                    <p>Manage bookings, leads, customers, and analytics from the centralized OFFSTUMP CRM dashboard.</p>
+                    <a href="/crm/" target="_blank" class="premium-btn">Open CRM Tool</a>
+                </div>
+
+                <div class="premium-card" style="opacity: 0.5;">
+                    <h3 style="color: #666;">More Tools Coming...</h3>
+                    <p>We're actively rolling out more health tracking dashboards & premium video coaching modules soon.
+                    </p>
+                    <span class="premium-btn" style="background: #333; cursor: not-allowed;">Locked</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/auth-client.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize Supabase as fast as possible
+            const client = await window.initSupabase();
+            if (!client) return;
+
+            // Fetch session and profile in parallel to save time
+            const { data: { session }, error } = await client.auth.getSession();
+
+            // Guard against no session
+            if (!session || error) {
+                window.location.href = '/auth/login';
+                return;
+            }
+
+            try {
+                // parallel fetch profile
+                const profile = await window.getCachedProfile(session.access_token);
+
+                if (!profile || profile.is_active === false) {
+                    window.location.href = '/auth/unauthorized';
+                    return;
+                }
+
+                // UI Logic based on role
+                const pageTitle = document.getElementById('pageTitle');
+                const usersTab = document.getElementById('usersTab');
+                const analyticsTab = document.getElementById('analyticsTab');
+                const navTabs = document.getElementById('navTabs');
+                const logoutBtn = document.getElementById('logoutBtn');
+
+                if (profile.role === 'admin') {
+                    pageTitle.textContent = 'Premium Services';
+                    usersTab.style.display = 'inline-block';
+                    analyticsTab.style.display = 'inline-block';
+                    const crmCard = document.getElementById('crm-card');
+                    if (crmCard) crmCard.style.display = 'block';
+                } else {
+                    pageTitle.textContent = 'Premium Services';
+                    usersTab.style.display = 'none';
+                    analyticsTab.style.display = 'none';
+                }
+
+                document.getElementById('mainHeader').style.display = 'flex';
+                navTabs.style.display = 'flex';
+                logoutBtn.style.display = 'inline-block';
+
+                // Show content immediately
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+
+                // Handle BMI Link Click - Generate Secure Ticket
+                const bmiLink = document.getElementById('bmi-link');
+                const handleBmiClick = async (e) => {
+                    e.preventDefault();
+                    const originalText = bmiLink.textContent;
+                    bmiLink.textContent = "Securely opening...";
+                    bmiLink.style.opacity = "0.7";
+                    bmiLink.style.pointerEvents = "none";
+
+                    try {
+                        const ticketRes = await fetch('/api/me', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${session.access_token}`
+                            },
+                            body: JSON.stringify({ action: 'generate_ticket' })
+                        });
+
+                        const data = await ticketRes.json();
+                        if (data.ticket) {
+                            // Redirect to BMI (Integrated via Vercel Rewrite)
+                            window.open(`/bmi?ticket=${data.ticket}`, '_blank');
+                        } else {
+                            throw new Error(data.error || "Failed to generate access ticket");
+                        }
+                    } catch (err) {
+                        console.error("Secure access failed", err);
+                        alert("Secure access failed: " + err.message);
+                    } finally {
+                        bmiLink.textContent = originalText;
+                        bmiLink.style.opacity = "1";
+                        bmiLink.style.pointerEvents = "auto";
+                    }
+                };
+                bmiLink.onclick = handleBmiClick;
+            } catch (err) {
+                console.error("Auth check failed", err);
+                window.location.href = '/auth/login';
+            }
+
+            // logout logic
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                const client = await window.initSupabase();
+                await client.auth.signOut();
+                window.clearSessionCache();
+                window.location.href = '/auth/login';
+            });
+        });
+    </script>
+</body>
+
+</html>
