@@ -219,6 +219,9 @@
             const lineInstance = useRef(null);
             const barInstance = useRef(null);
 
+            const [currentPage, setCurrentPage] = useState(1);
+            const itemsPerPage = 10;
+
             useEffect(() => {
                 const init = async () => {
                     const client = await window.initSupabase();
@@ -231,7 +234,6 @@
                     }
 
                     try {
-                        // Optimization: Check profile (potentially from cache) AND fetch analytics in parallel
                         const [profile, analyticsRes] = await Promise.all([
                             window.getCachedProfile(session.access_token),
                             fetch('/api/analytics', {
@@ -325,6 +327,9 @@
                 window.location.href = '/auth/login';
             };
 
+            const paginatedEvents = data ? data.recentEvents.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : [];
+            const totalPages = data ? Math.ceil(data.recentEvents.length / itemsPerPage) : 0;
+
             return el('div', { className: 'container' },
                 el('div', { className: 'header', style: { marginBottom: '20px' } },
                     el('h1', null, title),
@@ -361,11 +366,11 @@
                         )
                     ),
                     el('div', { className: 'table-container' },
-                        el('h2', null, 'Recent Events (50)'),
+                        el('h2', null, `Recent Events (${data.recentEvents.length})`),
                         el('table', null,
                             el('thead', null, el('tr', null, el('th', null, 'Event Name'), el('th', null, 'Page Path'), el('th', null, 'Device'), el('th', null, 'Time'), el('th', null, 'Metadata'))),
                             el('tbody', null,
-                                data.recentEvents.length > 0 ? data.recentEvents.map(evt =>
+                                paginatedEvents.length > 0 ? paginatedEvents.map(evt =>
                                     el('tr', { key: evt.id },
                                         el('td', null, evt.event_name),
                                         el('td', null, evt.page_path),
@@ -375,7 +380,22 @@
                                     )
                                 ) : el('tr', null, el('td', { colSpan: 5 }, 'No recent events found.'))
                             )
-                        )
+                        ),
+                        totalPages > 1 ? el('div', { style: { marginTop: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' } },
+                            el('button', {
+                                className: 'tab-btn',
+                                onClick: () => setCurrentPage(p => Math.max(1, p - 1)),
+                                disabled: currentPage === 1,
+                                style: currentPage === 1 ? { opacity: 0.5, cursor: 'default' } : {}
+                            }, 'Previous'),
+                            el('span', { style: { color: 'rgba(255,255,255,0.7)' } }, `Page ${currentPage} of ${totalPages}`),
+                            el('button', {
+                                className: 'tab-btn',
+                                onClick: () => setCurrentPage(p => Math.min(totalPages, p + 1)),
+                                disabled: currentPage === totalPages,
+                                style: currentPage === totalPages ? { opacity: 0.5, cursor: 'default' } : {}
+                            }, 'Next')
+                        ) : null
                     )
                 ) : null
             );

@@ -1,3 +1,5 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve(process.cwd(), '.env.local') });
 const { calculateBmi, getBmiCategory, calculateBodyFatPercent, getBodyFatCategory } = require("./bmi");
 
 /* ═══════════════════════════════════════════════════════════════

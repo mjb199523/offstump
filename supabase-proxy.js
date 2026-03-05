@@ -14,6 +14,10 @@ app.use('/', createProxyMiddleware({
     secure: false,
     headers: {
         Host: SUPABASE_HOST
+    },
+    // Ensure we don't send the Host header of localhost to the target
+    onProxyReq: (proxyReq) => {
+        proxyReq.setHeader('Host', SUPABASE_HOST);
     }
 }));
 

@@ -323,33 +323,82 @@
     <script src="/auth-client.js"></script>
     <script>
         let sessionToken = '';
+        let allUsers = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        function renderUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pagedUsers = allUsers.slice(start, end);
+
+            if (pagedUsers.length > 0) {
+                tbody.innerHTML = pagedUsers.map(u => `
+                    <tr>
+                        <td>${u.email}</td>
+                        <td>${u.role}</td>
+                        <td><span class="badge ${u.is_active ? 'active' : 'inactive'}">${u.is_active ? 'Active' : 'Inactive'}</span></td>
+                        <td>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="toggle-btn" onclick="toggleStatus('${u.id}', ${u.is_active})">
+                                    ${u.is_active ? 'Deactivate' : 'Activate'}
+                                </button>
+                                <button class="delete-btn" onclick="deleteUser('${u.id}', '${u.email}')">
+                                    Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            } else {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No users found.</td></tr>';
+            }
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(allUsers.length / itemsPerPage);
+            let paginationHtml = '';
+
+            if (totalPages > 1) {
+                paginationHtml = `
+                    <div style="margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                        <button class="tab-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled style="opacity:0.5; cursor:default;"' : ''}>Previous</button>
+                        <span style="color: var(--text-secondary);">Page ${currentPage} of ${totalPages}</span>
+                        <button class="tab-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled style="opacity:0.5; cursor:default;"' : ''}>Next</button>
+                    </div>
+                `;
+            }
+
+            // Re-use or create pagination container
+            let pagContainer = document.getElementById('paginationContainer');
+            if (!pagContainer) {
+                pagContainer = document.createElement('div');
+                pagContainer.id = 'paginationContainer';
+                document.getElementById('usersTableBody').closest('.card').appendChild(pagContainer);
+            }
+            pagContainer.innerHTML = paginationHtml;
+        }
+
+        window.changePage = (page) => {
+            const totalPages = Math.ceil(allUsers.length / itemsPerPage);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderUsers();
+        };
 
         async function fetchUsers() {
             try {
                 const res = await fetch('/api/admin/users', { headers: { 'Authorization': `Bearer ${sessionToken}` } });
                 const data = await res.json();
 
-                const tbody = document.getElementById('usersTableBody');
                 if (data.users) {
-                    tbody.innerHTML = data.users.map(u => `
-                        <tr>
-                            <td>${u.email}</td>
-                            <td>${u.role}</td>
-                            <td><span class="badge ${u.is_active ? 'active' : 'inactive'}">${u.is_active ? 'Active' : 'Inactive'}</span></td>
-                            <td>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="toggle-btn" onclick="toggleStatus('${u.id}', ${u.is_active})">
-                                        ${u.is_active ? 'Deactivate' : 'Activate'}
-                                    </button>
-                                    <button class="delete-btn" onclick="deleteUser('${u.id}', '${u.email}')">
-                                        Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    `).join('');
+                    allUsers = data.users;
+                    renderUsers();
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="4" style="color:red">Failed to load</td></tr>';
+                    document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="4" style="color:red">Failed to load</td></tr>';
                 }
             } catch (e) {
                 console.error(e);

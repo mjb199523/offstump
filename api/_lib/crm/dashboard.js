@@ -12,11 +12,10 @@ module.exports = async (req, res) => {
     let user;
 
     try {
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        const adminKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        const supabaseUrl = (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL);
+        const adminKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY);
         supabaseAdmin = createClient(supabaseUrl, adminKey);
 
-        // Auth Middleware Checking
         const { data: authData, error: authErr } = await supabaseAdmin.auth.getUser(token);
         if (authErr || !authData.user) return res.status(401).json({ error: 'Unauthorized' });
         user = authData.user;
@@ -39,106 +38,97 @@ module.exports = async (req, res) => {
         try {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-
             const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            const sevenDaysAgo = new Date(today);
+            sevenDaysAgo.setDate(today.getDate() - 7);
 
-            // 1. Total Revenue (COMPLETED bookings)
-            const { data: totalRevenueData } = await supabaseAdmin
-                .from('bookings')
-                .select('amount')
-                .eq('status', 'COMPLETED');
-
+            // 1. KPI Calculations
+            const { data: totalRevenueData } = await supabaseAdmin.from('bookings').select('amount').eq('status', 'COMPLETED');
             const totalRevenue = (totalRevenueData || []).reduce((sum, b) => sum + (Number(b.amount) || 0), 0);
 
-            // Monthly Revenue (COMPLETED bookings this month)
-            const { data: monthRevenueData } = await supabaseAdmin
-                .from('bookings')
-                .select('amount')
+            const { data: monthRevenueData } = await supabaseAdmin.from('bookings').select('amount')
                 .eq('status', 'COMPLETED')
                 .gte('date', startOfMonth.toISOString().split('T')[0]);
-
             const monthRevenue = (monthRevenueData || []).reduce((sum, b) => sum + (Number(b.amount) || 0), 0);
 
-            // 2. Total Customers
-            const { count: totalCustomers } = await supabaseAdmin
-                .from('customers')
-                .select('*', { count: 'exact', head: true });
-
-            // 3. Bookings this month
-            const { count: currentMonthBookings } = await supabaseAdmin
-                .from('bookings')
-                .select('*', { count: 'exact', head: true })
+            const { count: totalCustomers } = await supabaseAdmin.from('customers').select('*', { count: 'exact', head: true });
+            const { count: currentMonthBookings } = await supabaseAdmin.from('bookings').select('*', { count: 'exact', head: true })
                 .gte('date', startOfMonth.toISOString().split('T')[0]);
 
-            // 4. Weekly Revenue (mock data)
-            const revenueData = [
-                { name: "Mon", revenue: Math.floor(Math.random() * 5000), bookings: Math.floor(Math.random() * 8) + 2 },
-                { name: "Tue", revenue: Math.floor(Math.random() * 5000), bookings: Math.floor(Math.random() * 8) + 2 },
-                { name: "Wed", revenue: Math.floor(Math.random() * 5000), bookings: Math.floor(Math.random() * 8) + 2 },
-                { name: "Thu", revenue: Math.floor(Math.random() * 5000), bookings: Math.floor(Math.random() * 8) + 2 },
-                { name: "Fri", revenue: Math.floor(Math.random() * 8000), bookings: Math.floor(Math.random() * 12) + 2 },
-                { name: "Sat", revenue: Math.floor(Math.random() * 12000) + 4000, bookings: Math.floor(Math.random() * 18) + 5 },
-                { name: "Sun", revenue: Math.floor(Math.random() * 14000) + 4000, bookings: Math.floor(Math.random() * 20) + 5 },
-            ];
+            // 2. Dynamic Weekly Trend
+            const { data: weeklyData } = await supabaseAdmin.from('bookings').select('date, amount')
+                .gte('date', sevenDaysAgo.toISOString().split('T')[0]);
 
-            // 5. Source Data (placeholder)
-            const sourceData = [
-                { name: "Walk In", value: 4 },
-                { name: "Instagram", value: 3 },
-                { name: "Referral", value: 2 },
-                { name: "Website", value: 1 },
-            ];
+            const dayMap = {};
+            const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(sevenDaysAgo);
+                d.setDate(sevenDaysAgo.getDate() + i);
+                dayMap[d.toISOString().split('T')[0]] = { name: days[d.getDay()], revenue: 0, bookings: 0 };
+            }
 
-            // 6. Payment Modes (placeholder)
-            const paymentData = [
-                { name: "UPI", value: 5 },
-                { name: "Cash", value: 3 },
-                { name: "Card", value: 2 },
-            ];
+            (weeklyData || []).forEach(b => {
+                if (dayMap[b.date]) {
+                    dayMap[b.date].revenue += Number(b.amount) || 0;
+                    dayMap[b.date].bookings += 1;
+                }
+            });
+            const revenueData = Object.values(dayMap);
 
-            // 7. Service Data (placeholder)
-            const serviceData = [
-                { name: "Cricket", bookings: 10 },
-                { name: "Football", bookings: 7 },
-                { name: "Badminton", bookings: 5 },
-            ];
+            // 3. Dynamic Lead Sources
+            const { data: leadSources } = await supabaseAdmin.from('leads').select('source');
+            const sourceCounts = {};
+            (leadSources || []).forEach(l => {
+                const s = l.source || 'Direct';
+                sourceCounts[s] = (sourceCounts[s] || 0) + 1;
+            });
+            const sourceData = Object.entries(sourceCounts).map(([name, value]) => ({ name, value }));
 
-            // 8. Peak Hours (mock)
-            const peakHoursData = [
-                { time: "08:00", walkins: 2, prepay: 4 },
-                { time: "10:00", walkins: 4, prepay: 1 },
-                { time: "12:00", walkins: 1, prepay: 2 },
-                { time: "16:00", walkins: 8, prepay: 5 },
-                { time: "18:00", walkins: 15, prepay: 10 },
-                { time: "20:00", walkins: 20, prepay: 25 },
-            ];
+            // 4. Dynamic Payment Modes
+            const { data: payments } = await supabaseAdmin.from('bookings').select('payment_method');
+            const paymentCounts = {};
+            (payments || []).forEach(p => {
+                const mode = p.payment_method || 'Other';
+                paymentCounts[mode] = (paymentCounts[mode] || 0) + 1;
+            });
+            const paymentData = Object.entries(paymentCounts).map(([name, value]) => ({ name, value }));
 
-            const bookingCount = currentMonthBookings || 0;
+            // 5. Dynamic Service Distribution
+            const { data: serviceBookings } = await supabaseAdmin.from('bookings').select('service_type');
+            const serviceCounts = {};
+            (serviceBookings || []).forEach(s => {
+                const type = s.service_type || 'Uncategorized';
+                serviceCounts[type] = (serviceCounts[type] || 0) + 1;
+            });
+            const serviceData = Object.entries(serviceCounts).map(([name, bookings]) => ({ name, bookings }))
+                .sort((a, b) => b.bookings - a.bookings).slice(0, 5);
+
+            // 6. Dynamic Peak Hours (Slot Analysis)
+            const { data: slotData } = await supabaseAdmin.from('bookings').select('slot');
+            const hourMap = {};
+            (slotData || []).forEach(s => {
+                const slot = s.slot || 'N/A';
+                hourMap[slot] = (hourMap[slot] || 0) + 1;
+            });
+            const peakHoursData = Object.entries(hourMap).map(([time, walkins]) => ({ time, walkins, prepay: 0 }));
 
             return res.json({
-                revenue: {
-                    total: totalRevenue,
-                    thisMonth: monthRevenue,
-                    trend: "+5.1%",
-                },
-                customers: {
-                    total: totalCustomers || 0,
-                    trend: "+2.4%"
-                },
+                revenue: { total: totalRevenue, thisMonth: monthRevenue, trend: "+0%" },
+                customers: { total: totalCustomers || 0, trend: "+0%" },
                 bookings: {
-                    thisMonth: bookingCount,
-                    avgValue: bookingCount > 0 ? Math.round(totalRevenue / bookingCount) : 0,
-                    trend: "+12.1%"
+                    thisMonth: currentMonthBookings || 0,
+                    avgValue: currentMonthBookings > 0 ? Math.round(monthRevenue / currentMonthBookings) : 0,
+                    trend: "+0%"
                 },
-                sourceData,
-                paymentData,
-                serviceData,
+                sourceData: sourceData.length ? sourceData : [{ name: 'None', value: 0 }],
+                paymentData: paymentData.length ? paymentData : [{ name: 'None', value: 0 }],
+                serviceData: serviceData.length ? serviceData : [{ name: 'None', bookings: 0 }],
                 revenueData,
-                peakHoursData
+                peakHoursData: peakHoursData.length ? peakHoursData : [{ time: 'N/A', walkins: 0, prepay: 0 }]
             });
         } catch (error) {
             console.error(error);
-            return res.status(500).json({ error: "Failed to fetch analytics" });
+            return res.status(500).json({ error: "Failed to generate dynamic dashboard" });
         }
     }
 

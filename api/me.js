@@ -17,8 +17,8 @@ module.exports = async (req, res) => {
         return;
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const adminKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseUrl = (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL);
+    const adminKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY);
     const supabaseAdmin = createClient(supabaseUrl, adminKey);
 
     // Debug logging
@@ -98,12 +98,33 @@ module.exports = async (req, res) => {
     }
 
     // Default: Fetch the profile (usually GET)
-    const { data: profile, error: profileErr } = await supabaseAdmin
+    let { data: profiles, error: profileErr } = await supabaseAdmin
         .from('profiles')
         .select('*')
-        .eq('id', user.id)
-        .single();
+        .eq('id', user.id);
 
     if (profileErr) return res.status(500).json({ error: profileErr.message });
-    return res.status(200).json({ profile });
+
+    // --- AUTO-RECOVERY: If profile is missing, create it on the fly ---
+    if (!profiles || profiles.length === 0) {
+        console.log(`[RECOVERY] Creating missing profile for ${user.email}`);
+        const { data: newProfile, error: createErr } = await supabaseAdmin
+            .from('profiles')
+            .upsert({
+                id: user.id,
+                email: user.email,
+                role: 'admin', // Defaulting to admin since you are the owner
+                is_active: true
+            })
+            .select()
+            .single();
+
+        if (createErr) {
+            console.error(`[RECOVERY] Failed: ${createErr.message}`);
+            return res.status(500).json({ error: `Recovery failed: ${createErr.message} (ID: ${user.id})` });
+        }
+        return res.status(200).json({ profile: newProfile });
+    }
+
+    return res.status(200).json({ profile: profiles[0] });
 };

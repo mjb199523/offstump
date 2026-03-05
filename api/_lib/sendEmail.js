@@ -1,3 +1,5 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve(process.cwd(), '.env.local') });
 const nodemailer = require("nodemailer");
 
 async function sendNotificationEmail(userInput, plan) {

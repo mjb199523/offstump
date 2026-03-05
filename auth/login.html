@@ -214,7 +214,25 @@
                     const res = await fetch('/api/me', { headers: { 'Authorization': `Bearer ${data.session.access_token}` } });
                     const { profile, error: apiErr } = await res.json();
 
-                    if (apiErr || !profile || profile.is_active === false) {
+                    if (apiErr) {
+                        await client.auth.signOut();
+                        errorMsg.textContent = "Server Error: " + apiErr;
+                        errorMsg.style.display = 'block';
+                        btn.disabled = false;
+                        btn.innerHTML = 'Login';
+                        return;
+                    }
+
+                    if (!profile) {
+                        await client.auth.signOut();
+                        errorMsg.textContent = "Profile missing. Contact Admin.";
+                        errorMsg.style.display = 'block';
+                        btn.disabled = false;
+                        btn.innerHTML = 'Login';
+                        return;
+                    }
+
+                    if (profile.is_active === false) {
                         await client.auth.signOut();
                         errorMsg.textContent = "Your account is deactivated. Contact Admin.";
                         errorMsg.style.display = 'block';

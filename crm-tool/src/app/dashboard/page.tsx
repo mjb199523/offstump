@@ -69,7 +69,7 @@ export default function Dashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
                     <StatCard icon={<TrendingUp strokeWidth={1.5} size={18} />} title="Total Revenue" value={`₹ ${data.revenue.total.toLocaleString()}`} trend={data.revenue.trend} />
                     <StatCard icon={<Users strokeWidth={1.5} size={18} />} title="Customers" value={data.customers.total.toLocaleString()} trend={data.customers.trend} />
-                    <StatCard icon={<Calendar strokeWidth={1.5} size={18} />} title="Bookings This Mth" value={data.bookings.thisMonth.toLocaleString()} trend="+5.2%" />
+                    <StatCard icon={<Calendar strokeWidth={1.5} size={18} />} title="Bookings This Mth" value={data.bookings.thisMonth.toLocaleString()} trend={data.bookings.trend} />
                     <StatCard icon={<DollarSign strokeWidth={1.5} size={18} />} title="Avg Booking Value" value={`₹ ${data.bookings.avgValue.toLocaleString()}`} trend={data.bookings.trend} />
                 </div>
 

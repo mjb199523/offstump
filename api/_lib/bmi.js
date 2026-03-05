@@ -1,3 +1,5 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve(process.cwd(), '.env.local') });
 function calculateBmi(weightKg, heightCm) {
     const heightM = heightCm / 100;
     return weightKg / (heightM * heightM);
