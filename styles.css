@@ -1071,6 +1071,33 @@ ul {
     line-height: 1.6;
 }
 
+.audience-seo-block {
+    margin-top: 36px;
+    padding: 36px 40px;
+    text-align: center;
+    background: rgba(255, 106, 0, 0.03);
+    border: 1px solid rgba(255, 106, 0, 0.1);
+}
+
+.audience-seo-block h3 {
+    font-family: var(--font-primary);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--text-primary), var(--orange-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.audience-seo-block p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
 /* === BOOKING SECTION === */
 .booking {
     background: linear-gradient(180deg, transparent, rgba(255, 106, 0, 0.02), transparent);
