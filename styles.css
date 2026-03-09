@@ -1098,6 +1098,235 @@ ul {
     margin: 0 auto;
 }
 
+/* === SEO INTRO BLOCK === */
+.seo-intro {
+    padding-top: 0;
+}
+
+.seo-intro-block {
+    padding: 32px 40px;
+    text-align: center;
+    background: rgba(255, 106, 0, 0.02);
+    border: 1px solid rgba(255, 106, 0, 0.08);
+}
+
+.seo-intro-block p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* === SEO INTERNAL LINKS === */
+.seo-links-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.seo-link-card {
+    padding: 32px 28px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: all var(--transition-base);
+    cursor: pointer;
+    display: block;
+}
+
+.seo-link-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 106, 0, 0.3);
+    box-shadow: 0 8px 30px rgba(255, 106, 0, 0.1);
+}
+
+.seo-link-icon {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+}
+
+.seo-link-card h3 {
+    font-family: var(--font-primary);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.seo-link-card p {
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.seo-link-arrow {
+    color: var(--orange-primary);
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: transform var(--transition-fast);
+    display: inline-block;
+    text-decoration: none;
+}
+
+.seo-link-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.seo-link-card:hover .seo-link-arrow:first-child {
+    transform: translateX(4px);
+}
+
+/* === SEO LANDING PAGES === */
+.seo-page-hero {
+    padding: 140px 0 60px;
+    text-align: center;
+}
+
+.seo-page-hero h1 {
+    font-family: var(--font-primary);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #ffffff, var(--orange-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.seo-page-hero .seo-breadcrumb {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    margin-bottom: 16px;
+}
+
+.seo-page-hero .seo-breadcrumb a {
+    color: var(--orange-primary);
+    text-decoration: none;
+}
+
+.seo-page-content {
+    padding: 40px 0 80px;
+}
+
+.seo-page-content .seo-content-wrap {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.seo-page-content .glass-card {
+    padding: 48px 44px;
+}
+
+.seo-page-content h2 {
+    font-family: var(--font-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 32px 0 12px;
+    color: var(--text-primary);
+}
+
+.seo-page-content h2:first-child {
+    margin-top: 0;
+}
+
+.seo-page-content p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.9;
+    margin-bottom: 16px;
+}
+
+.seo-page-content ul {
+    margin: 12px 0 20px 20px;
+}
+
+.seo-page-content ul li {
+    color: var(--text-secondary);
+    font-size: 0.93rem;
+    line-height: 1.8;
+    margin-bottom: 6px;
+    list-style: disc;
+}
+
+.seo-page-content ul li::marker {
+    color: var(--orange-primary);
+}
+
+.seo-cta-box {
+    margin-top: 40px;
+    padding: 32px;
+    text-align: center;
+    background: rgba(255, 106, 0, 0.05);
+    border: 1px solid rgba(255, 106, 0, 0.15);
+    border-radius: var(--radius-lg);
+}
+
+.seo-cta-box h3 {
+    font-family: var(--font-primary);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.seo-cta-box p {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* === FAQ SECTION === */
+.faq-section {
+    margin-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 32px;
+}
+
+.faq-section h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.faq-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 16px 0;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-question {
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.faq-answer {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+    .seo-links-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .seo-page-content .glass-card {
+        padding: 32px 24px;
+    }
+
+    .seo-intro-block {
+        padding: 24px 20px;
+    }
+}
+
 /* === BOOKING SECTION === */
 .booking {
     background: linear-gradient(180deg, transparent, rgba(255, 106, 0, 0.02), transparent);

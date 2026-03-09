@@ -1,4 +1,5 @@
 {
+    "framework": null,
     "cleanUrls": true,
     "redirects": [
         {
@@ -29,11 +30,23 @@
             "destination": "/premium.html"
         },
         {
+            "source": "/indoor-cricket-guwahati",
+            "destination": "/indoor-cricket-guwahati.html"
+        },
+        {
+            "source": "/cricket-nets-guwahati",
+            "destination": "/cricket-nets-guwahati.html"
+        },
+        {
+            "source": "/bowling-machine-practice-guwahati",
+            "destination": "/bowling-machine-practice-guwahati.html"
+        },
+        {
             "source": "/api/(.*)",
             "destination": "/api/$1"
         },
         {
-            "source": "/((?!api/|bmi(?:/.*)?|crm(?:/.*)?|_next(?:/.*)?|admin/analytics.html|admin/users.html|auth/login.html|auth/unauthorized.html|premium.html|styles.css|script.js|logo.png|logo.jpeg|favicon.ico|auth-client.js).*)",
+            "source": "/((?!api/|bmi(?:/.*)?|crm(?:/.*)?|_next(?:/.*)?|admin/analytics.html|admin/users.html|auth/login.html|auth/unauthorized.html|premium.html|indoor-cricket-guwahati.html|cricket-nets-guwahati.html|bowling-machine-practice-guwahati.html|styles.css|script.js|logo.png|logo.jpeg|favicon.ico|auth-client.js).*)",
             "destination": "/index.html"
         }
     ]

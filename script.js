@@ -353,7 +353,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === SMOOTH SCROLL FOR ANCHOR LINKS ===
     const navbarHeight = 70;
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+
+    // Intercept clicks on any link pointing to /booking or #booking
+    document.querySelectorAll('a[href="/booking"], a[href="#booking"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector('#booking');
+            if (target) {
+                // We are on a page that has the #booking element (like homepage)
+                // Update URL to /booking without reloading
+                if (window.location.pathname !== '/booking') {
+                    history.pushState(null, null, '/booking');
+                }
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            } else {
+                // If the booking section doesn't exist on this page (like inner pages)
+                // Send them to homepage with an instruction to scroll, to avoid 404 on simple static local servers
+                window.location.href = '/?goto=booking';
+            }
+        });
+    });
+
+    // Handle normal anchor links
+    document.querySelectorAll('a[href^="#"]:not([href="#booking"])').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
@@ -366,6 +392,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Check if we loaded directly onto /booking or via fallback routing
+    if (window.location.search.includes('goto=booking') ||
+        window.location.pathname === '/booking' ||
+        window.location.pathname === '/booking.html' ||
+        window.location.pathname === '/booking/') {
+
+        // Clean URL if we arrived via fallback
+        if (window.location.search.includes('goto=booking')) {
+            history.replaceState(null, null, '/booking');
+        }
+
+        const target = document.querySelector('#booking');
+        if (target) {
+            setTimeout(() => {
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }, 300); // small delay to ensure DOM is ready and hero animation doesn't disrupt scroll
+        }
+    }
 
     // === MICRO INTERACTIONS ===
     // Add ripple effect to buttons
