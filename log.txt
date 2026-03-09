@@ -1,0 +1,5 @@
+﻿c848398927df49be8d483970869acd449494c6dd Fix BMI Tool Logo reference and images
+3467aee9e46c4f95c67e17fd1c143336a8473235 Update logo and favicons
+da04e955f21aed836794b834a62e0924c27179bb Remove scroll down indicator from hero section
+423c2de96baef9726c9c04d70de29ada6c5bb13e Add sitemap.xml for SEO
+f0479a20dd283c7d6b37c2e8598b7d3f1ca50ceb Add indoor cricket nets SEO block in audience section
