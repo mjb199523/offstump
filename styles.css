@@ -212,6 +212,23 @@ ul {
     font-weight: 700;
 }
 
+.ribbon-link {
+    color: var(--orange-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: rgba(255, 106, 0, 0.4);
+    transition: all var(--transition-fast);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+.ribbon-link:hover {
+    color: var(--text-primary);
+    background: rgba(255, 106, 0, 0.2);
+    text-decoration-color: var(--orange-primary);
+}
+
 /* Shimmer effect */
 .ribbon-banner::before {
     content: '';
