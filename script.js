@@ -112,26 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinkItems = document.querySelectorAll('.nav-links a');
 
     // Navbar scroll
-    let lastScroll = 0;
     window.addEventListener('scroll', () => {
         const currentScroll = window.pageYOffset;
         if (currentScroll > 50) {
             navbar.classList.add('scrolled');
-
-            // Hide ribbon on scroll down
-            if (ribbonBanner && ribbonBanner.classList.contains('show')) {
-                hideRibbon();
-            }
         } else {
             navbar.classList.remove('scrolled');
-
-            // Show ribbon when back at top
-            if (ribbonBanner && !ribbonBanner.classList.contains('show')) {
-                // We don't check sessionStorage anymore as per user request
-                showRibbon();
-            }
         }
-        lastScroll = currentScroll;
     });
 
     // Mobile nav toggle
