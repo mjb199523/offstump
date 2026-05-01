@@ -61,33 +61,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const ribbonBanner = document.getElementById('ribbonBanner');
     const ribbonClose = document.getElementById('ribbonClose');
 
+    const showRibbon = () => {
+        if (!ribbonBanner) return;
+        ribbonBanner.classList.add('show');
+        const ribbonHeight = ribbonBanner.offsetHeight;
+        document.documentElement.style.setProperty('--ribbon-height', `${ribbonHeight}px`);
+    };
+
+    const hideRibbon = () => {
+        if (!ribbonBanner) return;
+        ribbonBanner.classList.remove('show');
+        document.documentElement.style.setProperty('--ribbon-height', '0px');
+    };
+
     if (ribbonBanner && ribbonClose) {
-        const isRibbonClosed = sessionStorage.getItem('ribbonClosed');
-        if (!isRibbonClosed) {
-            // Show ribbon with slightly delayed slide down
-            setTimeout(() => {
-                ribbonBanner.classList.add('show');
-                const ribbonHeight = ribbonBanner.offsetHeight;
-                document.documentElement.style.setProperty('--ribbon-height', `${ribbonHeight}px`);
+        // Initial show
+        setTimeout(() => {
+            showRibbon();
+            // Account for ribbon in scroll calculations if page is not at top
+            if (window.scrollY > 0) {
+                window.scrollBy(0, ribbonBanner.offsetHeight);
+            }
+        }, 300);
 
-                // Account for ribbon in scroll calculations if page is not at top
-                if (window.scrollY > 0) {
-                    window.scrollBy(0, ribbonHeight);
-                }
-            }, 300);
-
-            // Handle window resize dynamically adjusting the gap
-            window.addEventListener('resize', () => {
-                if (ribbonBanner.classList.contains('show')) {
-                    document.documentElement.style.setProperty('--ribbon-height', `${ribbonBanner.offsetHeight}px`);
-                }
-            });
-        }
+        // Handle window resize dynamically adjusting the gap
+        window.addEventListener('resize', () => {
+            if (ribbonBanner.classList.contains('show')) {
+                document.documentElement.style.setProperty('--ribbon-height', `${ribbonBanner.offsetHeight}px`);
+            }
+        });
 
         ribbonClose.addEventListener('click', () => {
-            ribbonBanner.classList.remove('show');
-            document.documentElement.style.setProperty('--ribbon-height', '0px');
-            sessionStorage.setItem('ribbonClosed', 'true');
+            hideRibbon();
+            // Reappear after 10 seconds
+            setTimeout(() => {
+                // Only show if we are near the top of the page (to avoid jarring jumps while reading content)
+                // OR show regardless if that's what the user prefers. 
+                // The user said "again appear in website", I'll show it regardless but only if it's not already shown.
+                if (!ribbonBanner.classList.contains('show')) {
+                    showRibbon();
+                }
+            }, 10000);
         });
     }
 
@@ -106,16 +120,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Hide ribbon on scroll down
             if (ribbonBanner && ribbonBanner.classList.contains('show')) {
-                ribbonBanner.classList.remove('show');
-                document.documentElement.style.setProperty('--ribbon-height', '0px');
+                hideRibbon();
             }
         } else {
             navbar.classList.remove('scrolled');
 
-            // Show ribbon when back at top (if not manually closed)
-            if (ribbonBanner && !sessionStorage.getItem('ribbonClosed')) {
-                ribbonBanner.classList.add('show');
-                document.documentElement.style.setProperty('--ribbon-height', `${ribbonBanner.offsetHeight}px`);
+            // Show ribbon when back at top
+            if (ribbonBanner && !ribbonBanner.classList.contains('show')) {
+                // We don't check sessionStorage anymore as per user request
+                showRibbon();
             }
         }
         lastScroll = currentScroll;
