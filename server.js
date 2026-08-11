@@ -29,7 +29,14 @@ app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files
-app.use(express.static(path.join(__dirname, '.')));
+app.use(express.static(path.join(__dirname, '.'), { extensions: ['html'] }));
+
+const staticSections = ['home', 'about', 'services', 'machine', 'booking', 'contact', 'community', 'learn-more'];
+staticSections.forEach(section => {
+    app.get(`/${section}`, (req, res) => {
+        res.sendFile(path.join(__dirname, 'index.html'));
+    });
+});
 
 // === RATE LIMITER ===
 const bookingLimiter = rateLimit({
@@ -273,3 +280,5 @@ app.listen(PORT, () => {
     console.log(`💚 Health check: http://localhost:${PORT}/api/health`);
     console.log(`📧 Email: ${process.env.EMAIL_PASS ? 'Configured ✅' : 'NOT configured ❌'}\n`);
 });
+
+

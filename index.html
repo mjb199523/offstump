@@ -46,33 +46,35 @@ cricket practice latakata
     <meta property="og:description"
         content="Modern multi-sport and wellness arena in Guwahati. Cricket, Yoga, Fitness & more.">
     <meta property="og:type" content="website">
-    <title>OFFSTUMP – Play Beyond The Line | Multi-Sport & Wellness Arena, Guwahati</title>
+    <title>OFFSTUMP | Indoor Cricket & Wellness Arena</title>
+
+    <!-- Structured Data for Local Business -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SportsActivityLocation",
+      "name": "OFFSTUMP",
+      "description": "Indoor Cricket Practice & Multi-Sport Arena in Guwahati. Professional-grade nets with bowling machine speeds up to 130 kmph.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Latakata-Ganesh Nagar Road, House No. 133",
+        "addressLocality": "Guwahati",
+        "addressRegion": "Assam",
+        "postalCode": "781029",
+        "addressCountry": "IN"
+      },
+      "telephone": "+91 8753912572",
+      "areaServed": "Guwahati"
+    }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/logo%20-%20offstump.png">
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <!-- Ribbon Banner -->
-    <div class="ribbon-banner" id="ribbonBanner" aria-hidden="true">
-        <div class="ribbon-content">
-            <span class="ribbon-pulse"></span>
-            <span class="ribbon-text">
-                We are live in
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--orange-primary)"
-                    stroke-width="2.5" class="ribbon-icon">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                </svg>
-                <span class="ribbon-highlight">Guwahati</span>. <a href="#contact" class="ribbon-link">Contact</a> for booking
-            </span>
-        </div>
-        <button class="ribbon-close" id="ribbonClose" aria-label="Close ribbon">&times;</button>
-    </div>
 
     <!-- Animated Background -->
     <div class="bg-gradient-animated" aria-hidden="true"></div>
@@ -80,7 +82,7 @@ cricket practice latakata
     <!-- Sticky Navbar -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="#hero" class="nav-logo">
+            <a href="/home" class="nav-logo">
                 <img src="logo.png" alt="OFFSTUMP Logo" class="nav-logo-img">
             </a>
             <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
@@ -89,13 +91,15 @@ cricket practice latakata
                 <span></span>
             </button>
             <ul class="nav-links" id="navLinks">
-                <li><a href="#hero">Home</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#audience">For You</a></li>
-                <li><a href="/booking">Booking</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="#community">Community</a></li>
-                <li><a href="/auth/login" class="nav-login-btn">Login</a></li>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/services">Services</a></li>
+                <li><a href="/machine">Machine</a></li>
+                <li><a href="/booking">Book here</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/community">Community</a></li>
+                <li><a href="/learn-more">Explore More</a></li>
+                <li><a href="/auth/login" class="nav-login-btn">Admin Login</a></li>
             </ul>
         </div>
     </nav>
@@ -105,9 +109,9 @@ cricket practice latakata
         <div class="hero-particles" aria-hidden="true"></div>
         <div class="hero-content">
             <div class="hero-logo" data-reveal>
-                <span class="hero-brand-text">OFFSTUMP</span>
+                <h1 class="hero-brand-text">#OFF<span style="color: var(--accent);">STUMP</span></h1>
             </div>
-            <h1 class="hero-tagline" data-reveal>Play Beyond <span class="highlight">The Line</span></h1>
+            <h2 class="hero-tagline" data-reveal>Play Beyond The Line</h2>
             <p class="hero-subtitle" data-reveal>Multi-Sport &bull; Wellness &bull; Play &bull; Unwind</p>
             <div class="hero-cta" data-reveal>
                 <a href="/booking" class="btn btn-primary" id="hero-book-slot">
@@ -116,7 +120,7 @@ cricket practice latakata
                         <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                 </a>
-                <a href="#services" class="btn btn-glass" id="hero-explore">
+                <a href="/services" class="btn btn-glass" id="hero-explore">
                     <span>Explore Activities</span>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7" />
@@ -126,15 +130,108 @@ cricket practice latakata
         </div>
     </section>
 
-    <!-- SEO Intro Section -->
-    <section class="section seo-intro">
+    <!-- Marquee Section -->
+    <section class="marquee-section" aria-hidden="true">
+        <div class="marquee-banner">
+            <div class="marquee-content">
+                <!-- Group 1 -->
+                <div class="marquee-group">
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                </div>
+                <!-- Group 2 for seamless loop -->
+                <div class="marquee-group" aria-hidden="true">
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                    <span class="marquee-item"><span class="marquee-dot">*</span> <a href="/booking" class="marquee-text-inner">We are live in Guwahati. Contact for booking</a></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section about-section" id="about" aria-label="About OFFSTUMP">
         <div class="container">
-            <div class="seo-intro-block glass-card" data-reveal>
-                <p>OFFSTUMP is a professional indoor cricket arena in Guwahati offering high-quality cricket net
-                    practice with bowling machine speeds up to 130 kmph. Located in Latakata, the facility allows
-                    cricket players to train throughout the year with indoor cricket nets designed for batting and
-                    bowling practice. Whether you are preparing for tournaments or improving your batting skills,
-                    OFFSTUMP provides one of the best cricket practice environments in Guwahati.</p>
+            <div class="section-header" data-reveal>
+                <span class="section-label">About OFFSTUMP</span>
+                <h2 class="section-title">Indoor Cricket Practice & <span class="highlight">Multi-Sport Arena</span></h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="about-grid">
+                <div class="about-content" data-reveal>
+                    <p>
+                        OFFSTUMP is Guwahati's premier <a href="/indoor-cricket-guwahati" class="text-link">indoor cricket practice facility</a> and multi-sport arena, located in Latakata. We offer professional-grade indoor cricket nets equipped with bowling machines capable of speeds up to 130 kmph. Our sports training centre provides the perfect environment for athletes to train year-round, regardless of the weather.
+                    </p>
+                    <p>
+                        Whether you are a professional preparing for tournaments or an enthusiast looking to improve your batting and bowling skills, our cricket academy caters to all levels. Beyond cricket, OFFSTUMP is a comprehensive wellness destination offering fitness and yoga, creating a balanced space to play, train, and unwind.
+                    </p>
+                </div>
+                <div class="about-visual" data-reveal>
+                    <div class="video-carousel-wrapper" style="position: relative; width: 100%; max-width: 480px; margin: 0 auto;">
+                        <button class="carousel-btn prev" aria-label="Previous video" onclick="document.getElementById('aboutVideoCarousel').scrollBy({left: -256, behavior: 'smooth'})" style="position: absolute; left: -24px; top: 50%; transform: translateY(-50%); z-index: 10; width: 48px; height: 48px; border-radius: 50%; background: #ffffff; color: #000000; border: none; box-shadow: 0 8px 24px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s ease;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+
+                        <div class="video-carousel" id="aboutVideoCarousel" style="display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 20px 140px; scroll-behavior: smooth;">
+                            <!-- First Video (Was Second) -->
+                            <div class="carousel-item" style="scroll-snap-align: center; flex: 0 0 200px; position: relative; aspect-ratio: 9/16; border-radius: var(--radius-lg); overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border);">
+                                <video src="/OFFSTUMP_4SEC_LOOP.mp4" class="lazy-video" preload="none" muted loop playsinline style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;"></video>
+                                <a href="https://www.instagram.com/reel/Db493n3Buhg/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" rel="noopener noreferrer" aria-label="Watch on Instagram" style="position: absolute; inset: 0; z-index: 1;"></a>
+                                
+                                <div class="overlay-icon" style="position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; z-index: 2; pointer-events: none;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="7" y1="17" x2="17" y2="7"></line>
+                                        <polyline points="7 7 17 7 17 17"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="overlay-icon" style="position: absolute; bottom: 16px; left: 16px; width: 40px; height: 40px; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; z-index: 2; pointer-events: none;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- Second Video (Was First) -->
+                            <div class="carousel-item" style="scroll-snap-align: center; flex: 0 0 200px; position: relative; aspect-ratio: 9/16; border-radius: var(--radius-lg); overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border);">
+                                <video src="/offstump_clean_5sec_loop.mp4" class="lazy-video" preload="none" muted loop playsinline style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;"></video>
+                                <a href="https://www.instagram.com/reel/Db0m8YgTWsx/?igsh=MXZzbTk4OXQ4MXh6OQ==" target="_blank" rel="noopener noreferrer" aria-label="Watch on Instagram" style="position: absolute; inset: 0; z-index: 1;"></a>
+                                <div class="overlay-icon" style="position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; z-index: 2; pointer-events: none;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="7" y1="17" x2="17" y2="7"></line>
+                                        <polyline points="7 7 17 7 17 17"></polyline>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- Third Video -->
+                            <div class="carousel-item" style="scroll-snap-align: center; flex: 0 0 200px; position: relative; aspect-ratio: 9/16; border-radius: var(--radius-lg); overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border);">
+                                <video src="/Final%20loop%20video%203.mp4" class="lazy-video" preload="none" muted loop playsinline style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;"></video>
+                                <a href="#" style="pointer-events: none; position: absolute; inset: 0; z-index: 1;" aria-hidden="true"></a>
+                                <div class="overlay-icon" style="position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; z-index: 2; pointer-events: none;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="7" y1="17" x2="17" y2="7"></line>
+                                        <polyline points="7 7 17 7 17 17"></polyline>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="carousel-btn next" aria-label="Next video" onclick="document.getElementById('aboutVideoCarousel').scrollBy({left: 256, behavior: 'smooth'})" style="position: absolute; right: -24px; top: 50%; transform: translateY(-50%); z-index: 10; width: 48px; height: 48px; border-radius: 50%; background: #ffffff; color: #000000; border: none; box-shadow: 0 8px 24px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s ease;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -149,8 +246,10 @@ cricket practice latakata
             </div>
             <div class="services-grid">
                 <div class="glass-card service-card" data-reveal>
-                    <div class="service-emoji">🏏</div>
-                    <div class="service-badge">Popular</div>
+                    <div class="service-header">
+                        <div class="service-emoji">🏏</div>
+                        <div class="service-badge">Popular</div>
+                    </div>
                     <h3>Automatic Cricket Bowling Machine</h3>
                     <p>Experience professional-grade cricket practice with our state-of-the-art automatic bowling
                         machine. Perfect for batsmen of all skill levels.</p>
@@ -160,11 +259,13 @@ cricket practice latakata
                             <span class="service-pricing-price">₹100</span>
                         </div>
                     </div>
-                    <a href="#booking" class="service-link">Book Now →</a>
+                    <a href="/booking" class="service-link">Book Now →</a>
                 </div>
                 <div class="glass-card service-card" data-reveal>
-                    <div class="service-emoji">🧘</div>
-                    <div class="service-badge">Wellness</div>
+                    <div class="service-header">
+                        <div class="service-emoji">🧘</div>
+                        <div class="service-badge">Wellness</div>
+                    </div>
                     <h3>Manual Cricket & Yoga</h3>
                     <p>Blend traditional cricket coaching with mindful yoga sessions. Build both physical strength and
                         mental focus in one place.</p>
@@ -178,11 +279,13 @@ cricket practice latakata
                             <span class="service-pricing-price">₹700 / Month</span>
                         </div>
                     </div>
-                    <a href="#booking" class="service-link">Book Now →</a>
+                    <a href="/booking" class="service-link">Book Now →</a>
                 </div>
                 <div class="glass-card service-card service-card-coming" data-reveal>
-                    <div class="service-emoji">🚀</div>
-                    <div class="service-badge coming-badge">Coming Soon</div>
+                    <div class="service-header">
+                        <div class="service-emoji">🚀</div>
+                        <div class="service-badge coming-badge">Coming Soon</div>
+                    </div>
                     <h3>Much More Coming Soon</h3>
                     <p>We're expanding! New sports, fitness programs, and wellness activities are being added based on
                         community demand. Stay tuned!</p>
@@ -192,64 +295,116 @@ cricket practice latakata
         </div>
     </section>
 
-    <!-- Target Audience Section -->
-    <section class="section audience" id="audience">
+    <!-- Bowling Machine Features Section -->
+    <section class="section machine-features" id="machine">
         <div class="container">
             <div class="section-header" data-reveal>
-                <span class="section-label">Built For You</span>
-                <h2 class="section-title">Who It's <span class="highlight">For</span></h2>
+                <span class="section-label">Why Our Machine</span>
+                <h2 class="section-title">Train Like It's <span class="highlight">Match Day</span></h2>
                 <div class="section-line"></div>
             </div>
-            <div class="audience-grid">
-                <div class="glass-card audience-card" data-reveal>
-                    <div class="audience-icon">
-                        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="1.5">
-                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                            <circle cx="9" cy="7" r="4" />
-                            <path d="M23 21v-2a4 4 0 00-3-3.87" />
-                            <path d="M16 3.13a4 4 0 010 7.75" />
-                        </svg>
+            <div class="about-grid" style="align-items: flex-start;">
+                <div class="about-content" style="display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+                    <!-- Card 1 -->
+                    <div class="glass-card service-card" style="padding: 16px 20px; text-align: left; display: flex; align-items: flex-start; gap: 16px;" data-reveal>
+                        <div class="service-emoji" style="margin-bottom: 0; flex-shrink: 0; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 14l4-4"/>
+                                <path d="M3.34 16.99a10 10 0 1117.32 0"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 style="font-family: 'Source Serif 4', serif; color: var(--text-primary); font-size: 1.15rem; font-weight: 600; margin-bottom: 4px;">Any Speed You Need</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; font-family: 'Inter', sans-serif; margin: 0;">Select any speed from 40 kmph to 130 kmph — train at your pace and build up to genuine match intensity.</p>
+                        </div>
                     </div>
-                    <h3>School & College Students</h3>
-                    <p>Fun, safe, and energizing space to play and grow</p>
-                </div>
-                <div class="glass-card audience-card" data-reveal>
-                    <div class="audience-icon">
-                        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="1.5">
-                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                            <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
-                        </svg>
+                    <!-- Card 2 -->
+                    <div class="glass-card service-card" style="padding: 16px 20px; text-align: left; display: flex; align-items: flex-start; gap: 16px;" data-reveal>
+                        <div class="service-emoji" style="margin-bottom: 0; flex-shrink: 0; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 12A10 10 0 0012 2v10z"/>
+                                <path d="M22 12A10 10 0 0112 22v-10z"/>
+                                <path d="M2 12A10 10 0 0112 2v10z"/>
+                                <path d="M2 12A10 10 0 0012 22v-10z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 style="font-family: 'Source Serif 4', serif; color: var(--text-primary); font-size: 1.15rem; font-weight: 600; margin-bottom: 4px;">Every Delivery Type</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; font-family: 'Inter', sans-serif; margin: 0;">In-swing, out-swing, and random mode — face the deliveries that actually get batsmen out.</p>
+                        </div>
                     </div>
-                    <h3>Working Professionals</h3>
-                    <p>Unwind after work with sports and wellness activities</p>
-                </div>
-                <div class="glass-card audience-card" data-reveal>
-                    <div class="audience-icon">
-                        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="1.5">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-                            <line x1="9" y1="9" x2="9.01" y2="9" />
-                            <line x1="15" y1="9" x2="15.01" y2="9" />
-                        </svg>
+                    <!-- Card 3 -->
+                    <div class="glass-card service-card" style="padding: 16px 20px; text-align: left; display: flex; align-items: flex-start; gap: 16px;" data-reveal>
+                        <div class="service-emoji" style="margin-bottom: 0; flex-shrink: 0; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="4" y1="21" x2="4" y2="14"/>
+                                <line x1="4" y1="10" x2="4" y2="3"/>
+                                <line x1="12" y1="21" x2="12" y2="12"/>
+                                <line x1="12" y1="8" x2="12" y2="3"/>
+                                <line x1="20" y1="21" x2="20" y2="16"/>
+                                <line x1="20" y1="12" x2="20" y2="3"/>
+                                <line x1="1" y1="14" x2="7" y2="14"/>
+                                <line x1="9" y1="8" x2="15" y2="8"/>
+                                <line x1="17" y1="16" x2="23" y2="16"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 style="font-family: 'Source Serif 4', serif; color: var(--text-primary); font-size: 1.15rem; font-weight: 600; margin-bottom: 4px;">Precision Swing Control</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; font-family: 'Inter', sans-serif; margin: 0;">Fine-tune in-swing and out-swing up to 10 levels for exact, repeatable practice every session.</p>
+                        </div>
                     </div>
-                    <h3>Amateur & Semi-Pro Cricketers</h3>
-                    <p>Sharpen your skills with professional-grade facilities</p>
+
+                    <p style="margin-top: 8px; font-weight: 500; font-family: var(--font-primary); color: var(--text-primary); font-size: 1.05rem;" data-reveal>
+                        Check our setup on your right. &rarr;
+                    </p>
                 </div>
-                <div class="glass-card audience-card" data-reveal>
-                    <div class="audience-icon">
-                        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="1.5">
-                            <path d="M18 20V10M12 20V4M6 20v-6" />
-                        </svg>
+
+                <div class="about-visual" data-reveal style="min-width: 0;">
+                    <div class="video-carousel-wrapper" style="position: relative; width: 100%; max-width: 480px; margin: 0 auto;">
+                        <button class="carousel-btn prev" aria-label="Previous setup" id="setupPrevBtn" style="position: absolute; left: -24px; top: 50%; transform: translateY(-50%); z-index: 10; width: 48px; height: 48px; border-radius: 50%; background: #ffffff; color: #000000; border: none; box-shadow: 0 8px 24px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s ease;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        
+                        <button class="carousel-btn next" aria-label="Next setup" id="setupNextBtn" style="position: absolute; right: -24px; top: 50%; transform: translateY(-50%); z-index: 10; width: 48px; height: 48px; border-radius: 50%; background: #ffffff; color: #000000; border: none; box-shadow: 0 8px 24px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s ease;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+
+                        <div class="video-carousel" id="setupVideoCarousel" style="display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 20px calc(50% - 100px); scroll-behavior: smooth;">
+                            <!-- Slide 1 -->
+                            <div class="carousel-item" style="scroll-snap-align: center; flex: 0 0 200px; position: relative; aspect-ratio: 9/16; border-radius: var(--radius-lg); overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border);">
+                                <video src="/Media/WhatsApp%20Video%202026-08-11%20at%203.18.25%20PM.mp4" class="lazy-video" preload="none" muted loop playsinline style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;"></video>
+                            </div>
+                            <!-- Slide 2 -->
+                            <div class="carousel-item" style="scroll-snap-align: center; flex: 0 0 200px; position: relative; aspect-ratio: 9/16; border-radius: var(--radius-lg); overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border);">
+                                <video src="/Media/WhatsApp%20Video%202026-08-11%20at%203.18.16%20PM.mp4" class="lazy-video" preload="none" muted loop playsinline style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;"></video>
+                            </div>
+                            <!-- Slide 3 -->
+                            <div class="carousel-item" style="scroll-snap-align: center; flex: 0 0 200px; position: relative; aspect-ratio: 9/16; border-radius: var(--radius-lg); overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border);">
+                                <img src="/Media/WhatsApp%20Image%202026-08-11%20at%203.18.14%20PM.jpeg" alt="OFFSTUMP Setup 3" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+                            </div>
+                            <!-- Slide 4 -->
+                            <div class="carousel-item" style="scroll-snap-align: center; flex: 0 0 200px; position: relative; aspect-ratio: 9/16; border-radius: var(--radius-lg); overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border);">
+                                <img src="/Media/WhatsApp%20Image%202026-08-11%20at%203.18.15%20PM.jpeg" alt="OFFSTUMP Setup 4" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+                            </div>
+                            <!-- Slide 5 -->
+                            <div class="carousel-item" style="scroll-snap-align: center; flex: 0 0 200px; position: relative; aspect-ratio: 9/16; border-radius: var(--radius-lg); overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border);">
+                                <img src="/Media/WhatsApp%20Image%202026-08-11%20at%203.18.17%20PM.jpeg" alt="OFFSTUMP Setup 5" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+                            </div>
+                            <!-- Slide 6 -->
+                            <div class="carousel-item" style="scroll-snap-align: center; flex: 0 0 200px; position: relative; aspect-ratio: 9/16; border-radius: var(--radius-lg); overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border);">
+                                <img src="/Media/WhatsApp%20Image%202026-08-11%20at%203.18.18%20PM.jpeg" alt="OFFSTUMP Setup 6" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+                            </div>
+                            <!-- Slide 7 -->
+                            <div class="carousel-item" style="scroll-snap-align: center; flex: 0 0 200px; position: relative; aspect-ratio: 9/16; border-radius: var(--radius-lg); overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border);">
+                                <img src="/Media/WhatsApp%20Image%202026-08-11%20at%203.18.22%20PM.jpeg" alt="OFFSTUMP Setup 7" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+                            </div>
+                            <!-- Slide 8 -->
+                            <div class="carousel-item" style="scroll-snap-align: center; flex: 0 0 200px; position: relative; aspect-ratio: 9/16; border-radius: var(--radius-lg); overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border);">
+                                <img src="/Media/WhatsApp%20Image%202026-08-11%20at%203.18.27%20PM.jpeg" alt="OFFSTUMP Setup 8" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+                            </div>
+                        </div>
                     </div>
-                    <h3>Fitness & Wellness Enthusiasts</h3>
-                    <p>Holistic approach to health with yoga and fitness programs</p>
                 </div>
-            </div>
-            <div class="audience-seo-block glass-card" data-reveal>
-                <h3>Indoor Cricket Nets in Guwahati</h3>
-                <p>OFFSTUMP provides professional indoor cricket practice in Guwahati with bowling machine speeds up to
-                    130 kmph. Located in Latakata-Ganesh Nagar Road, our indoor cricket arena offers pay-to-play cricket
-                    nets for players looking to improve batting and bowling skills.</p>
             </div>
         </div>
     </section>
@@ -275,13 +430,13 @@ cricket practice latakata
                                 <input type="tel" id="booking-phone" name="phone" placeholder="+91 XXXXX XXXXX"
                                     required>
                             </div>
-                        </div>
-                        <div class="form-row">
                             <div class="form-group">
                                 <label for="booking-email">Email Address</label>
                                 <input type="email" id="booking-email" name="email" placeholder="you@email.com"
                                     required>
                             </div>
+                        </div>
+                        <div class="form-row">
                             <div class="form-group">
                                 <label for="booking-activity">Select Activity</label>
                                 <select id="booking-activity" name="activity" required>
@@ -292,8 +447,6 @@ cricket practice latakata
                                     <option value="other">🎯 Other</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="form-row">
                             <div class="form-group">
                                 <label for="booking-date">Preferred Date</label>
                                 <input type="date" id="booking-date" name="date" required>
@@ -307,6 +460,15 @@ cricket practice latakata
                             <label for="booking-message">Additional Message (Optional)</label>
                             <textarea id="booking-message" name="message" placeholder="Any special requests..."
                                 rows="3"></textarea>
+                        </div>
+                        <div class="booking-notice">
+                            <div class="booking-notice-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    <polyline points="9 12 11 14 15 10"></polyline>
+                                </svg>
+                            </div>
+                            <p>No payment required to book! Simply submit your booking request and we will contact you to confirm your slot. Pay only when you are satisfied with your experience.</p>
                         </div>
                         <button type="submit" class="btn btn-primary btn-submit" id="booking-submit">
                             <span>Confirm Booking</span>
@@ -443,7 +605,7 @@ cricket practice latakata
     </section>
 
     <!-- SEO Internal Links Section -->
-    <section class="section seo-links-section">
+    <section class="section seo-links-section" id="learn-more">
         <div class="container">
             <div class="section-header" data-reveal>
                 <span class="section-label">Explore More</span>
@@ -494,11 +656,11 @@ cricket practice latakata
                     <p>Play Beyond The Line</p>
                 </div>
                 <div class="footer-links">
-                    <a href="#hero">Home</a>
-                    <a href="#services">Services</a>
+                    <a href="/home">Home</a>
+                    <a href="/services">Services</a>
                     <a href="/booking">Book</a>
-                    <a href="#contact">Contact</a>
-                    <a href="#community">Community</a>
+                    <a href="/contact">Contact</a>
+                    <a href="/community">Community</a>
                 </div>
                 <div class="footer-socials">
                     <a href="https://www.instagram.com/offstump26?igsh=Nm02YXgzNWhsbnY3&utm_source=qr" target="_blank"
@@ -573,3 +735,7 @@ cricket practice latakata
 </body>
 
 </html>
+
+
+
+

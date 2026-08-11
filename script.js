@@ -4,6 +4,26 @@
    ============================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
+    window.initialPathname = window.location.pathname;
+
+    // === THEME TOGGLE LOGIC ===
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        const currentTheme = localStorage.getItem('theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeToggle.textContent = currentTheme === 'dark' ? '🌙' : '☀️';
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+        });
+    }
+
 
     // === ANALYTICS TRACKING ===
     const trackEvent = async (eventName, metadata = {}) => {
@@ -57,53 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // === RIBBON BANNER ===
-    const ribbonBanner = document.getElementById('ribbonBanner');
-    const ribbonClose = document.getElementById('ribbonClose');
 
-    const showRibbon = () => {
-        if (!ribbonBanner) return;
-        ribbonBanner.classList.add('show');
-        const ribbonHeight = ribbonBanner.offsetHeight;
-        document.documentElement.style.setProperty('--ribbon-height', `${ribbonHeight}px`);
-    };
-
-    const hideRibbon = () => {
-        if (!ribbonBanner) return;
-        ribbonBanner.classList.remove('show');
-        document.documentElement.style.setProperty('--ribbon-height', '0px');
-    };
-
-    if (ribbonBanner && ribbonClose) {
-        // Initial show
-        setTimeout(() => {
-            showRibbon();
-            // Account for ribbon in scroll calculations if page is not at top
-            if (window.scrollY > 0) {
-                window.scrollBy(0, ribbonBanner.offsetHeight);
-            }
-        }, 300);
-
-        // Handle window resize dynamically adjusting the gap
-        window.addEventListener('resize', () => {
-            if (ribbonBanner.classList.contains('show')) {
-                document.documentElement.style.setProperty('--ribbon-height', `${ribbonBanner.offsetHeight}px`);
-            }
-        });
-
-        ribbonClose.addEventListener('click', () => {
-            hideRibbon();
-            // Reappear after 10 seconds
-            setTimeout(() => {
-                // Only show if we are near the top of the page (to avoid jarring jumps while reading content)
-                // OR show regardless if that's what the user prefers. 
-                // The user said "again appear in website", I'll show it regardless but only if it's not already shown.
-                if (!ribbonBanner.classList.contains('show')) {
-                    showRibbon();
-                }
-            }, 10000);
-        });
-    }
 
     // === NAVBAR SCROLL EFFECT ===
     const navbar = document.getElementById('navbar');
@@ -145,11 +119,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const top = section.offsetTop;
             const height = section.offsetHeight;
             const id = section.getAttribute('id');
-            const link = document.querySelector(`.nav-links a[href="#${id}"]`);
+            let selector = `.nav-links a[href="#${id}"], .nav-links a[href="/#${id}"], .nav-links a[href="/${id}"]`;
+            if (id === 'hero') {
+                selector += `, .nav-links a[href="/home"], .nav-links a[href="/"]`;
+            }
+            const link = document.querySelector(selector);
             if (link) {
                 if (scrollPos >= top && scrollPos < top + height) {
-                    navLinkItems.forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
+                    if (!link.classList.contains('active')) {
+                        navLinkItems.forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                        // Update URL silently to reflect current section
+                        let newUrl = id === 'hero' ? '/home' : `/${id}`;
+                        if (window.location.pathname !== newUrl && window.location.pathname !== '/auth/login') {
+                            history.replaceState(null, null, newUrl);
+                        }
+                    }
                 }
             }
         });
@@ -354,16 +339,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // === SMOOTH SCROLL FOR ANCHOR LINKS ===
     const navbarHeight = 70;
 
-    // Intercept clicks on any link pointing to /booking or #booking
-    document.querySelectorAll('a[href="/booking"], a[href="#booking"]').forEach(anchor => {
+    const navSections = ['home', 'hero', 'about', 'services', 'machine', 'booking', 'contact', 'community', 'learn-more'];
+    const navSelectors = navSections.map(s => `a[href="/${s}"], a[href="#${s}"], a[href="/#${s}"]`).join(', ') + ', a[href="/"]';
+    
+    // Intercept clicks on any internal section link
+    document.querySelectorAll(navSelectors).forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            const target = document.querySelector('#booking');
+            const href = this.getAttribute('href');
+            let id = '';
+            
+            if (href === '/' || href === '/home') {
+                id = 'hero';
+            } else if (href.startsWith('/#')) {
+                id = href.substring(2);
+            } else if (href.startsWith('#')) {
+                id = href.substring(1);
+            } else if (href.startsWith('/')) {
+                id = href.substring(1);
+            }
+            
+            const target = document.querySelector('#' + id);
+            
             if (target) {
-                // We are on a page that has the #booking element (like homepage)
-                // Update URL to /booking without reloading
-                if (window.location.pathname !== '/booking') {
-                    history.pushState(null, null, '/booking');
+                // We are on a page that has the target element (like homepage)
+                // Update URL cleanly without reloading
+                let newUrl = id === 'hero' ? '/home' : `/${id}`;
+                if (window.location.pathname !== newUrl) {
+                    history.pushState(null, null, newUrl);
                 }
                 const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
                 window.scrollTo({
@@ -371,40 +374,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     behavior: 'smooth'
                 });
             } else {
-                // If the booking section doesn't exist on this page (like inner pages)
-                // Send them to homepage with an instruction to scroll, to avoid 404 on simple static local servers
-                window.location.href = '/?goto=booking';
+                // If the section doesn't exist on this page (like inner pages)
+                // Send them to the URL natively, let server handle it
+                window.location.href = href;
             }
         });
     });
 
-    // Handle normal anchor links
-    document.querySelectorAll('a[href^="#"]:not([href="#booking"])').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-    // Check if we loaded directly onto /booking or via fallback routing
-    if (window.location.search.includes('goto=booking') ||
-        window.location.pathname === '/booking' ||
-        window.location.pathname === '/booking.html' ||
-        window.location.pathname === '/booking/') {
-
+    // Check if we loaded directly onto a static section route
+    const staticSections = ['home', 'about', 'services', 'machine', 'booking', 'contact', 'community', 'learn-more'];
+    // Use window.initialPathname which we will define at the top of the file
+    const currentPath = (window.initialPathname || window.location.pathname).substring(1); // remove leading slash
+    
+    if (staticSections.includes(currentPath) || window.location.search.includes('goto=booking')) {
         // Clean URL if we arrived via fallback
         if (window.location.search.includes('goto=booking')) {
             history.replaceState(null, null, '/booking');
         }
 
-        const target = document.querySelector('#booking');
+        const targetId = (staticSections.includes(currentPath) && currentPath !== 'home') ? currentPath : (currentPath === 'home' ? 'hero' : 'booking');
+        const target = document.querySelector('#' + targetId);
+        
         if (target) {
             setTimeout(() => {
                 const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
@@ -414,6 +404,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }, 300); // small delay to ensure DOM is ready and hero animation doesn't disrupt scroll
         }
+    }
+
+    // === MAKE ENTIRE MARQUEE CLICKABLE ===
+    const marqueeBanner = document.querySelector('.marquee-banner');
+    if (marqueeBanner) {
+        marqueeBanner.style.cursor = 'pointer';
+        marqueeBanner.addEventListener('click', (e) => {
+            // Check if they clicked an actual anchor to prevent double-firing if JS handles it
+            if (e.target.tagName.toLowerCase() !== 'a' && !e.target.closest('a')) {
+                const bookingLink = document.querySelector('a[href="/booking"]');
+                if (bookingLink) {
+                    bookingLink.click();
+                } else {
+                    window.location.href = '/booking';
+                }
+            }
+        });
     }
 
     // === MICRO INTERACTIONS ===
@@ -499,4 +506,91 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log('%c🏏 OFFSTUMP', 'color: #FF6A00; font-size: 24px; font-weight: bold;');
     console.log('%cPlay Beyond The Line', 'color: #FF8C33; font-size: 14px;');
+});
+// Video Carousel Scroll Logic
+document.addEventListener('DOMContentLoaded', () => {
+    const initCarousel = (carouselId) => {
+        const carousel = document.getElementById(carouselId);
+        if (!carousel) return;
+        const items = Array.from(carousel.querySelectorAll('.carousel-item'));
+        
+        items.forEach(item => {
+            item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        });
+
+        const updateCarousel = () => {
+            const carouselCenter = carousel.getBoundingClientRect().left + carousel.offsetWidth / 2;
+            
+            items.forEach(item => {
+                const itemCenter = item.getBoundingClientRect().left + item.offsetWidth / 2;
+                const dist = Math.abs(carouselCenter - itemCenter);
+                
+                if (dist < item.offsetWidth / 2 + 10) {
+                    item.style.opacity = '1';
+                    item.style.transform = 'scale(1)';
+                    item.classList.add('active');
+                } else {
+                    item.style.opacity = '0.4';
+                    item.style.transform = 'scale(0.9)';
+                    item.classList.remove('active');
+                }
+            });
+        };
+
+        carousel.addEventListener('scroll', () => requestAnimationFrame(updateCarousel));
+        window.addEventListener('resize', updateCarousel);
+        setTimeout(() => {
+            const centerIndex = Math.floor(items.length / 2);
+            if (items[centerIndex]) {
+                const scrollPos = items[centerIndex].offsetLeft - carousel.clientWidth / 2 + items[centerIndex].offsetWidth / 2;
+                carousel.scrollTo({ left: scrollPos, behavior: 'smooth' });
+            }
+            updateCarousel();
+        }, 150);
+    };
+    
+    initCarousel('aboutVideoCarousel');
+    initCarousel('setupVideoCarousel');
+});
+
+
+
+
+// Lazy Load Videos
+document.addEventListener('DOMContentLoaded', () => {
+    const lazyVideos = document.querySelectorAll('.lazy-video');
+    if (lazyVideos.length === 0) return;
+
+    const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const video = entry.target;
+                video.play().catch(e => console.log('Autoplay prevented', e));
+                videoObserver.unobserve(video);
+            }
+        });
+    }, { rootMargin: '0px 0px 200px 0px' });
+
+    lazyVideos.forEach(video => videoObserver.observe(video));
+});
+
+
+// === SETUP CAROUSEL LOGIC ===
+document.addEventListener('DOMContentLoaded', () => {
+    const setupCarousel = document.getElementById('setupVideoCarousel');
+    const prevBtn = document.getElementById('setupPrevBtn');
+    const nextBtn = document.getElementById('setupNextBtn');
+
+    if (setupCarousel && prevBtn && nextBtn) {
+        // Scroll by item width (200px) + gap (16px) = 216px
+        const scrollByWidth = () => 216;
+
+        prevBtn.addEventListener('click', () => {
+            setupCarousel.scrollBy({ left: -scrollByWidth(), behavior: 'smooth' });
+        });
+
+        nextBtn.addEventListener('click', () => {
+            setupCarousel.scrollBy({ left: scrollByWidth(), behavior: 'smooth' });
+        });
+    }
 });

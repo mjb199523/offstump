@@ -5,21 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - OFFSTUMP</title>
+    <link rel="icon" type="image/png" href="/logo%20-%20offstump.png">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --bg-primary: #0a0a0a;
-            --bg-card: rgba(255, 255, 255, 0.05);
-            --orange-primary: #FF6A00;
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
+            --bg-primary: #F7F5F2;
+            --bg-card: #FFFFFF;
+            --orange-primary: #CC785C;
+            --text-primary: #2B2A27;
+            --text-secondary: #6B6862;
+            --border: #E6E2D8;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Source Serif 4', Georgia, serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             margin: 0;
@@ -37,12 +39,12 @@
             text-align: center;
             width: 100%;
             max-width: 400px;
-            border: 1px solid rgba(255, 106, 0, 0.2);
+            border: 1px solid var(--border);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .login-card h2 {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Source Serif 4', Georgia, serif;
             margin: 0 0 24px 0;
             font-size: 1.8rem;
         }
@@ -63,9 +65,9 @@
             width: 100%;
             padding: 12px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
             font-size: 1rem;
             box-sizing: border-box;
             transition: all 0.3s ease;
@@ -74,7 +76,7 @@
         .input:focus {
             border-color: var(--orange-primary);
             outline: none;
-            box-shadow: 0 0 0 2px rgba(255, 106, 0, 0.2);
+            box-shadow: 0 0 0 2px rgba(204, 120, 92, 0.2);
         }
 
         .btn {
@@ -91,7 +93,7 @@
         }
 
         .btn:hover:not(:disabled) {
-            background: #E65C00;
+            background: #B8674D;
         }
 
         .btn:disabled {
@@ -116,9 +118,9 @@
             display: inline-block;
             width: 16px;
             height: 16px;
-            border: 2px solid rgba(255, 255, 255, .3);
+            border: 2px solid rgba(0, 0, 0, .1);
             border-radius: 50%;
-            border-top-color: #fff;
+            border-top-color: var(--orange-primary);
             animation: spinner .6s linear infinite;
             vertical-align: middle;
         }
@@ -253,3 +255,6 @@
 </body>
 
 </html>
+
+
+
