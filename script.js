@@ -196,15 +196,19 @@ document.addEventListener('DOMContentLoaded', () => {
         particlesContainer.appendChild(particle);
 
         setTimeout(() => {
-            particle.remove();
+            if (particle && particle.parentNode) {
+                particle.remove();
+            }
         }, (duration + 3) * 1000);
     }
 
-    // Create particles periodically
-    setInterval(createParticle, 400);
-    // Create initial batch
-    for (let i = 0; i < 15; i++) {
-        setTimeout(createParticle, i * 200);
+    if (particlesContainer) {
+        // Create particles periodically
+        setInterval(createParticle, 400);
+        // Create initial batch
+        for (let i = 0; i < 15; i++) {
+            setTimeout(createParticle, i * 200);
+        }
     }
 
     // === BOOKING FORM ===
@@ -407,7 +411,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (window.location.hash) {
-        const hashTarget = document.querySelector(window.location.hash);
+        // Save the target immediately before any other scripts run
+        const hashId = window.location.hash.substring(1);
+        const hashTarget = document.querySelector('#' + hashId);
+        
         if (hashTarget) {
             setTimeout(() => {
                 const targetPosition = hashTarget.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
@@ -415,11 +422,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     top: targetPosition,
                     behavior: 'smooth'
                 });
-                const id = window.location.hash.substring(1);
-                if (id === 'hero') {
+                if (hashId === 'hero') {
                     history.replaceState(null, null, '/home');
                 } else {
-                    history.replaceState(null, null, `/${id}`);
+                    history.replaceState(null, null, `/${hashId}`);
                 }
             }, 300);
         }
