@@ -476,15 +476,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // === PARALLAX ON MOUSE (Desktop only) ===
     if (window.innerWidth > 768) {
         const heroLogo = document.querySelector('.hero-logo-img');
-        document.querySelector('.hero').addEventListener('mousemove', (e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
-            const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
+        const heroSection = document.querySelector('.hero');
+        if (heroSection) {
+            heroSection.addEventListener('mousemove', (e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
+                const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
 
-            if (heroLogo) {
-                heroLogo.style.transform = `translate(${x * 10}px, ${y * 10}px)`;
-            }
-        });
+                if (heroLogo) {
+                    heroLogo.style.transform = `translate(${x * 10}px, ${y * 10}px)`;
+                }
+            });
+        }
     }
 
     // === COUNTER ANIMATION (if needed later) ===
