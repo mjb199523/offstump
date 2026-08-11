@@ -46,7 +46,7 @@
             "destination": "/api/$1"
         },
         {
-            "source": "/((?!api/|bmi(?:/.*)?|crm(?:/.*)?|_next(?:/.*)?|admin/analytics.html|admin/users.html|auth/login.html|auth/unauthorized.html|premium.html|indoor-cricket-guwahati.html|cricket-nets-guwahati.html|bowling-machine-practice-guwahati.html|styles.css|script.js|logo.png|logo.jpeg|favicon.ico|auth-client.js).*)",
+            "source": "/(.*)",
             "destination": "/index.html"
         }
     ]
