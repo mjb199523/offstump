@@ -1704,30 +1704,35 @@ a.contact-value:hover {
     }
 
     .nav-links {
-        position: fixed;
-        top: 0;
+        position: absolute;
+        top: 100%;
         left: 0;
         right: 0;
-        bottom: 0;
-        background: rgba(10, 10, 10, 0.97);
+        bottom: auto;
+        background: rgba(10, 10, 10, 0.95);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         flex-direction: column;
-        justify-content: center;
-        gap: 8px;
-        padding: 24px;
-        transform: translateX(100%);
-        transition: transform var(--transition-base);
-        z-index: 1000;
+        justify-content: flex-start;
+        gap: 0px;
+        padding: 16px 0;
+        transform: translateY(-150%);
+        transition: transform var(--transition-base), opacity var(--transition-base);
+        z-index: 999;
+        opacity: 0;
+        pointer-events: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .nav-links.active {
-        transform: translateX(0);
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
     }
 
     .nav-links li a {
-        font-size: 1.2rem;
-        padding: 14px 20px;
+        font-size: 1.1rem;
+        padding: 12px 20px;
         text-align: center;
         display: block;
     }
