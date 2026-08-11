@@ -406,6 +406,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    if (window.location.hash) {
+        const hashTarget = document.querySelector(window.location.hash);
+        if (hashTarget) {
+            setTimeout(() => {
+                const targetPosition = hashTarget.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+                const id = window.location.hash.substring(1);
+                if (id === 'hero') {
+                    history.replaceState(null, null, '/home');
+                } else {
+                    history.replaceState(null, null, `/${id}`);
+                }
+            }, 300);
+        }
+    }
+
     // === MAKE ENTIRE MARQUEE CLICKABLE ===
     const marqueeBanner = document.querySelector('.marquee-banner');
     if (marqueeBanner) {
