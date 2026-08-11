@@ -1739,7 +1739,8 @@ a.contact-value:hover {
 
     /* Hero */
     .hero {
-        padding: 100px 20px 60px;
+        padding: 120px 20px 40px;
+        min-height: auto;
     }
 
     .hero-logo-img {
