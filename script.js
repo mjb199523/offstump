@@ -714,7 +714,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (badgeDMain) badgeDMain.innerHTML = `10 Overs <span style="text-decoration: line-through; color: #A8A49C; margin-right: 4px;">${CAMPAIGN_CONFIG.originalPrice}</span> ${CAMPAIGN_CONFIG.offerPrice}`;
     if (badgeDSub) badgeDSub.innerHTML = `${CAMPAIGN_CONFIG.discount} &middot; Till 31 Aug 2026`;
-    if (badgeMobile) badgeMobile.innerHTML = `10 Overs <span style="text-decoration: line-through; color: #A8A49C; margin-right: 4px;">${CAMPAIGN_CONFIG.originalPrice}</span> ${CAMPAIGN_CONFIG.offerPrice} &middot; Till 31 Aug 2026`;
+    if (badgeMobile) badgeMobile.innerHTML = `<span>10 Overs <span style="text-decoration: line-through; color: #A8A49C; margin-right: 4px;">${CAMPAIGN_CONFIG.originalPrice}</span> ${CAMPAIGN_CONFIG.offerPrice}</span><span style="font-size: 0.85rem; color: #6B6862; margin-top: 2px; font-weight: 500;">${CAMPAIGN_CONFIG.discount} &middot; Till 31 Aug 2026</span>`;
 
     const closeBtn = document.getElementById('promoCloseBtn');
     const ctaBtn = document.getElementById('promoCtaBtn');
