@@ -622,3 +622,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// === SEO EXPLORE MORE CAROUSEL LOGIC ===
+document.addEventListener('DOMContentLoaded', () => {
+    const seoTrack = document.getElementById('seoLinksTrack');
+    const seoPrev = document.getElementById('seoCarouselPrev');
+    const seoNext = document.getElementById('seoCarouselNext');
+
+    if (!seoTrack || !seoPrev || !seoNext) return;
+
+    // Card width + gap (20px)
+    const getScrollAmount = () => {
+        const card = seoTrack.querySelector('.seo-link-card');
+        if (!card) return 300;
+        return card.getBoundingClientRect().width + 20;
+    };
+
+    const updateButtons = () => {
+        const atStart = seoTrack.scrollLeft <= 4;
+        const atEnd = seoTrack.scrollLeft + seoTrack.clientWidth >= seoTrack.scrollWidth - 4;
+        seoPrev.disabled = atStart;
+        seoNext.disabled = atEnd;
+    };
+
+    seoPrev.addEventListener('click', () => {
+        seoTrack.scrollBy({ left: -getScrollAmount() * 3, behavior: 'smooth' });
+    });
+
+    seoNext.addEventListener('click', () => {
+        seoTrack.scrollBy({ left: getScrollAmount() * 3, behavior: 'smooth' });
+    });
+
+    seoTrack.addEventListener('scroll', updateButtons, { passive: true });
+
+    // Initial state
+    updateButtons();
+});
