@@ -772,3 +772,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ==========================================
+// DYNAMIC GOOGLE RATING FETCH
+// ==========================================
+document.addEventListener('DOMContentLoaded', async () => {
+    const scoreElement = document.getElementById('live-google-rating-score');
+    const countElement = document.getElementById('live-google-rating-count');
+    
+    // Only proceed if the elements exist on the current page
+    if (!scoreElement || !countElement) return;
+
+    try {
+        const response = await fetch('/api/google-reviews');
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const data = await response.json();
+        
+        if (data && data.rating && data.reviews) {
+            scoreElement.textContent = `${data.rating} on Google`;
+            countElement.textContent = `${data.reviews} Reviews`;
+        }
+    } catch (error) {
+        console.error('Failed to fetch live Google rating:', error);
+        // Elements gracefully fallback to their hardcoded static values
+    }
+});
