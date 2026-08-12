@@ -461,6 +461,7 @@ ul {
     transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
     animation: fadeInUp 1s ease-out 0.9s both;
+    white-space: nowrap;
 }
 
 .hero-google-rating:hover {
@@ -529,6 +530,10 @@ ul {
     
     .rating-bottom {
         font-size: 0.8rem;
+    }
+    
+    .hide-mobile {
+        display: none;
     }
 }
 
