@@ -2154,3 +2154,443 @@ a.contact-value:hover {
         flex: 0 0 220px;
     }
 }
+
+/* =============================================
+   INDEPENDENCE DAY PROMO CAMPAIGN
+   ============================================= */
+
+/* Modal Overlay */
+.promo-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(2px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.promo-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Modal Content */
+.promo-modal-content {
+    background: #F7F5F2; /* Cream/off-white background */
+    color: #2B2A27; /* Dark typography */
+    border: 1px solid rgba(204, 120, 92, 0.3); /* Terracotta subtle border */
+    border-radius: var(--radius-lg, 20px);
+    padding: 40px 32px;
+    width: 90%;
+    max-width: 460px;
+    position: relative;
+    text-align: center;
+    transform: translateY(20px) scale(0.95);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.promo-modal-overlay.active .promo-modal-content {
+    transform: translateY(0) scale(1);
+}
+
+/* Modal subtle accents (Indian Flag Colors) */
+.promo-modal-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, #FF9933 0%, #FFFFFF 50%, #138808 100%);
+}
+
+.promo-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #6B6862;
+    cursor: pointer;
+    line-height: 1;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+}
+
+.promo-modal-close:hover {
+    background: rgba(204, 120, 92, 0.1);
+    color: var(--accent);
+}
+
+.promo-modal-header h3 {
+    font-family: var(--font-primary);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    color: #2B2A27;
+}
+
+.promo-session {
+    font-family: var(--font-secondary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #6B6862;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.promo-pricing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.promo-offer-price {
+    font-family: var(--font-primary);
+    font-size: 4.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+}
+
+.promo-original-price {
+    font-family: var(--font-primary);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #A8A49C;
+    text-decoration: line-through;
+}
+
+.promo-discount-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #ffffff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 28px;
+    letter-spacing: 0.5px;
+}
+
+.promo-trial {
+    font-family: var(--font-secondary);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #2B2A27;
+    margin-bottom: 12px;
+}
+
+.promo-validity {
+    font-family: var(--font-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #6B6862;
+    margin-bottom: 32px;
+}
+
+.promo-cta {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+}
+
+/* Floating Badge */
+.promo-badge {
+    position: fixed;
+    bottom: 90px; /* Above WhatsApp button which is at 30px + 50px height = 80px */
+    right: 30px;
+    background: #F7F5F2;
+    border: 1px solid rgba(204, 120, 92, 0.4);
+    border-radius: 30px;
+    padding: 12px 24px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    display: flex;
+    .seo-link-card {
+        flex: 0 0 240px;
+    }
+    .seo-carousel-wrapper {
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .seo-link-card {
+        flex: 0 0 220px;
+    }
+}
+
+/* =============================================
+   INDEPENDENCE DAY PROMO CAMPAIGN
+   ============================================= */
+
+/* Modal Overlay */
+.promo-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(2px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.promo-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Modal Content */
+.promo-modal-content {
+    background: #F7F5F2; /* Cream/off-white background */
+    color: #2B2A27; /* Dark typography */
+    border: 1px solid rgba(204, 120, 92, 0.3); /* Terracotta subtle border */
+    border-radius: var(--radius-lg, 20px);
+    padding: 40px 32px;
+    width: 90%;
+    max-width: 460px;
+    position: relative;
+    text-align: center;
+    transform: translateY(20px) scale(0.95);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.promo-modal-overlay.active .promo-modal-content {
+    transform: translateY(0) scale(1);
+}
+
+/* Modal subtle accents (Indian Flag Colors) */
+.promo-modal-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, #FF9933 0%, #FFFFFF 50%, #138808 100%);
+}
+
+.promo-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #6B6862;
+    cursor: pointer;
+    line-height: 1;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+}
+
+.promo-modal-close:hover {
+    background: rgba(204, 120, 92, 0.1);
+    color: var(--accent);
+}
+
+.promo-modal-header h3 {
+    font-family: var(--font-primary);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    color: #2B2A27;
+}
+
+.promo-session {
+    font-family: var(--font-secondary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #6B6862;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.promo-pricing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.promo-offer-price {
+    font-family: var(--font-primary);
+    font-size: 4.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+}
+
+.promo-original-price {
+    font-family: var(--font-primary);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #A8A49C;
+    text-decoration: line-through;
+}
+
+.promo-discount-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #ffffff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 28px;
+    letter-spacing: 0.5px;
+}
+
+.promo-trial {
+    font-family: var(--font-secondary);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #2B2A27;
+    margin-bottom: 12px;
+}
+
+.promo-validity {
+    font-family: var(--font-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #6B6862;
+    margin-bottom: 32px;
+}
+
+.promo-cta {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+}
+
+/* Floating Badge */
+.promo-badge {
+    position: fixed;
+    bottom: 90px; /* Above WhatsApp button which is at 30px + 50px height = 80px */
+    right: 30px;
+    background: #F7F5F2;
+    border: 1px solid rgba(204, 120, 92, 0.4);
+    border-radius: 30px;
+    padding: 12px 24px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    color: #2B2A27;
+    font-family: var(--font-secondary);
+}
+
+.promo-badge.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.promo-badge:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    border-color: var(--accent);
+}
+
+.promo-badge-divider {
+    display: none;
+}
+
+.promo-badge-desktop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+#badgeDesktopSub {
+    font-size: 0.85rem;
+    color: #6B6862;
+    margin-top: 2px;
+}
+
+.promo-badge-mobile {
+    display: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .promo-badge {
+        bottom: 90px; /* Keep above WhatsApp on mobile */
+        right: 20px;
+        padding: 10px 20px;
+    }
+    .promo-badge-desktop {
+        display: none;
+    }
+    .promo-badge-mobile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .promo-modal-content {
+        padding: 32px 24px;
+        width: 92%;
+    }
+    .promo-offer-price {
+        font-size: 3.8rem;
+    }
+}

@@ -658,3 +658,117 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial state
     updateButtons();
 });
+
+// === INDEPENDENCE DAY CAMPAIGN ===
+document.addEventListener('DOMContentLoaded', () => {
+    const CAMPAIGN_CONFIG = {
+        id: "independence-day-2026",
+        enabled: true,
+        startDate: "2026-08-12T00:00:00",
+        endDate: "2026-08-31T23:59:59", // Expires End of 31 Aug 2026
+        title: "INDEPENDENCE DAY SPECIAL",
+        sessionText: "10 OVERS CRICKET SESSION",
+        originalPrice: "₹100",
+        offerPrice: "₹90",
+        discount: "10% OFF",
+        trialText: "1 OVER FREE TRIAL INCLUDED",
+        validityText: "EXTENDED TILL 31 AUGUST 2026",
+        ctaText: "BOOK YOUR SLOT &rarr;"
+    };
+
+    const overlay = document.getElementById('promoModal');
+    const badge = document.getElementById('promoBadge');
+    if (!overlay || !badge || !CAMPAIGN_CONFIG.enabled) return;
+
+    // Check Expiry (Browser local time)
+    const now = new Date();
+    const expiryDate = new Date(CAMPAIGN_CONFIG.endDate);
+    if (now > expiryDate) {
+        // Campaign expired, silently exit, do not render
+        overlay.remove();
+        badge.remove();
+        return;
+    }
+
+    // Populate Data (Allows centralized config management)
+    const elTitle = document.getElementById('promoModalTitle');
+    const elSession = document.getElementById('promoSession');
+    const elOffer = document.getElementById('promoOfferPrice');
+    const elOriginal = document.getElementById('promoOriginalPrice');
+    const elDiscount = document.getElementById('promoDiscount');
+    const elTrial = document.getElementById('promoTrial');
+    const elValidity = document.getElementById('promoValidity');
+    const elCta = document.getElementById('promoCtaText');
+    const badgeDMain = document.getElementById('badgeDesktopMain');
+    const badgeDSub = document.getElementById('badgeDesktopSub');
+    const badgeMobile = document.getElementById('badgeMobileMain');
+
+    if (elTitle) elTitle.innerHTML = CAMPAIGN_CONFIG.title;
+    if (elSession) elSession.innerHTML = CAMPAIGN_CONFIG.sessionText;
+    if (elOffer) elOffer.innerHTML = CAMPAIGN_CONFIG.offerPrice;
+    if (elOriginal) elOriginal.innerHTML = CAMPAIGN_CONFIG.originalPrice;
+    if (elDiscount) elDiscount.innerHTML = CAMPAIGN_CONFIG.discount;
+    if (elTrial) elTrial.innerHTML = CAMPAIGN_CONFIG.trialText;
+    if (elValidity) elValidity.innerHTML = CAMPAIGN_CONFIG.validityText;
+    if (elCta) elCta.innerHTML = CAMPAIGN_CONFIG.ctaText;
+    
+    if (badgeDMain) badgeDMain.innerHTML = `10 Overs <span style="text-decoration: line-through; color: #A8A49C; margin-right: 4px;">${CAMPAIGN_CONFIG.originalPrice}</span> ${CAMPAIGN_CONFIG.offerPrice}`;
+    if (badgeDSub) badgeDSub.innerHTML = `${CAMPAIGN_CONFIG.discount} &middot; Till 31 Aug 2026`;
+    if (badgeMobile) badgeMobile.innerHTML = `10 Overs <span style="text-decoration: line-through; color: #A8A49C; margin-right: 4px;">${CAMPAIGN_CONFIG.originalPrice}</span> ${CAMPAIGN_CONFIG.offerPrice} &middot; Till 31 Aug 2026`;
+
+    const closeBtn = document.getElementById('promoCloseBtn');
+    const ctaBtn = document.getElementById('promoCtaBtn');
+
+    // State Key
+    const storageKey = `offstump_${CAMPAIGN_CONFIG.id}_seen`;
+    
+    // Check if on homepage
+    const currentPath = window.location.pathname.replace(/\/$/, ""); // Normalize trailing slash
+    const isHomePage = currentPath === '' || currentPath === '/home' || currentPath === '/index.html';
+
+    const showModal = () => {
+        overlay.classList.add('active');
+        badge.classList.remove('active');
+        // Prevent background scrolling
+        document.body.style.overflow = 'hidden';
+    };
+
+    const hideModal = () => {
+        overlay.classList.remove('active');
+        badge.classList.add('active');
+        document.body.style.overflow = '';
+        localStorage.setItem(storageKey, 'true');
+    };
+
+    // Auto-trigger logic
+    const hasSeenPromo = localStorage.getItem(storageKey);
+    if (!hasSeenPromo && isHomePage) {
+        setTimeout(showModal, 1800); // Trigger after 1.8s
+    } else if (hasSeenPromo) {
+        // If they've seen it before, just show the badge silently
+        badge.classList.add('active');
+    }
+
+    // Event Listeners
+    if (closeBtn) closeBtn.addEventListener('click', hideModal);
+    
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) hideModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+            hideModal();
+        }
+    });
+
+    badge.addEventListener('click', () => {
+        showModal();
+    });
+
+    if (ctaBtn) {
+        ctaBtn.addEventListener('click', () => {
+            hideModal(); // Close modal on CTA click, existing anchor logic handles the smooth scroll
+        });
+    }
+});

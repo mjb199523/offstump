@@ -50,22 +50,34 @@ cricket practice latakata
 
     <!-- Structured Data for Local Business -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SportsActivityLocation",
-      "name": "OFFSTUMP",
-      "description": "Indoor Cricket Practice & Multi-Sport Arena in Guwahati. Professional-grade nets with bowling machine speeds up to 130 kmph.",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Latakata-Ganesh Nagar Road, House No. 133",
-        "addressLocality": "Guwahati",
-        "addressRegion": "Assam",
-        "postalCode": "781029",
-        "addressCountry": "IN"
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "SportsActivityLocation",
+        "name": "OFFSTUMP",
+        "url": "https://offstumpwebsite.vercel.app/",
+        "logo": "https://offstumpwebsite.vercel.app/images/logo.png",
+        "image": "https://offstumpwebsite.vercel.app/images/hero-bg.jpg",
+        "description": "Indoor Cricket Practice & Multi-Sport Arena in Guwahati. Professional-grade nets with bowling machine speeds up to 130 kmph.",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Latakata-Ganesh Nagar Road, House No. 133",
+          "addressLocality": "Guwahati",
+          "addressRegion": "Assam",
+          "postalCode": "781029",
+          "addressCountry": "IN"
+        },
+        "telephone": "+91 8753912572",
+        "email": "offstump26@gmail.com",
+        "areaServed": "Guwahati"
       },
-      "telephone": "+91 8753912572",
-      "areaServed": "Guwahati"
-    }
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "OFFSTUMP",
+        "url": "https://offstumpwebsite.vercel.app/"
+      }
+    ]
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -851,6 +863,38 @@ cricket practice latakata
         ]
     }
     </script>
+
+    <!-- Independence Day Campaign -->
+    <div class="promo-modal-overlay" id="promoModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="promoModalTitle">
+        <div class="promo-modal-content">
+            <button class="promo-modal-close" id="promoCloseBtn" aria-label="Close Independence Day offer">&times;</button>
+            <div class="promo-modal-header">
+                <h3 id="promoModalTitle">INDEPENDENCE DAY SPECIAL</h3>
+            </div>
+            <div class="promo-modal-body">
+                <p class="promo-session" id="promoSession">10 OVERS CRICKET SESSION</p>
+                <div class="promo-pricing">
+                    <span class="promo-offer-price" id="promoOfferPrice">₹90</span>
+                    <span class="promo-original-price" id="promoOriginalPrice">₹100</span>
+                </div>
+                <div class="promo-discount-tag" id="promoDiscount">10% OFF</div>
+                <p class="promo-trial" id="promoTrial">1 OVER FREE TRIAL INCLUDED</p>
+                <p class="promo-validity" id="promoValidity">EXTENDED TILL 31 AUGUST 2026</p>
+            </div>
+            <div class="promo-modal-footer">
+                <a href="/booking" class="btn btn-primary promo-cta" id="promoCtaBtn">
+                    <span id="promoCtaText">BOOK YOUR SLOT &rarr;</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Persistent Floating Badge -->
+    <button class="promo-badge" id="promoBadge" aria-label="View Independence Day Offer">
+        <span class="promo-badge-desktop"><strong id="badgeDesktopMain">10 Overs ₹90</strong> <span class="promo-badge-divider">|</span> <span id="badgeDesktopSub">10% OFF &middot; Till 31 Aug</span></span>
+        <span class="promo-badge-mobile"><span id="badgeMobileMain">₹90 &middot; Till 31 Aug</span></span>
+    </button>
+
 </body>
 
 </html>

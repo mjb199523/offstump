@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /crm/
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /bmi/
+
+Sitemap: https://offstumpwebsite.vercel.app/sitemap.xml
