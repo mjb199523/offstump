@@ -810,7 +810,8 @@ ul {
     color: var(--text-secondary);
     font-size: 0.85rem;
     line-height: 1.5;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+    flex-grow: 1;
 }
 
 .service-pricing {
