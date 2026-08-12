@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&text=0123456789%E2%82%B9,.%2B/&display=swap');
+
 /* ========================================
    OFFSTUMP â€” Premium Sports & Wellness
    Dark Theme + Glassmorphism + Orange Accent
@@ -25,8 +27,8 @@
     --transition-base: 0.3s ease;
     --transition-slow: 0.5s ease;
 
-    --font-primary: 'Source Serif 4', Georgia, serif;
-    --font-secondary: 'Source Serif 4', Georgia, serif;
+    --font-primary: 'Outfit', 'Source Serif 4', Georgia, serif;
+    --font-secondary: 'Outfit', 'Source Serif 4', Georgia, serif;
 
     --ribbon-height: 0px;
 }
