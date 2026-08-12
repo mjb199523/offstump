@@ -646,11 +646,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     seoPrev.addEventListener('click', () => {
-        seoTrack.scrollBy({ left: -getScrollAmount() * 3, behavior: 'smooth' });
+        seoTrack.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
     });
 
     seoNext.addEventListener('click', () => {
-        seoTrack.scrollBy({ left: getScrollAmount() * 3, behavior: 'smooth' });
+        seoTrack.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
     });
 
     seoTrack.addEventListener('scroll', updateButtons, { passive: true });
