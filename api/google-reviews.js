@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     if (!process.env.GOOGLE_PLACES_API_KEY) {
         return res.status(200).json({ 
             rating: "5.0", 
-            reviews: "42+", 
+            reviews: "46+", 
             fallback: true 
         });
     }
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
             console.warn(`Google API returned status: ${data.status}`);
             return res.status(200).json({ 
                 rating: "5.0", 
-                reviews: "42+", 
+                reviews: "46+", 
                 fallback: true 
             });
         }
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
         // Fallback to static data if API fails
         return res.status(200).json({ 
             rating: "5.0", 
-            reviews: "42+", 
+            reviews: "46+", 
             fallback: true 
         });
     }
