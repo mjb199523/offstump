@@ -914,6 +914,7 @@ ul {
     padding: 8px 12px;
     margin-bottom: 16px;
     text-align: left;
+    flex-grow: 1;
 }
 
 .service-pricing-item {
