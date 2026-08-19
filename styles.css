@@ -896,7 +896,10 @@ ul {
     font-size: 1.15rem;
     font-weight: 700;
     margin-bottom: 8px;
-    min-height: 2.8em;
+    min-height: 60px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
 }
 
 .service-card p {
@@ -904,7 +907,7 @@ ul {
     font-size: 0.85rem;
     line-height: 1.5;
     margin-bottom: 16px;
-    min-height: 4.5em;
+    flex-grow: 1;
 }
 
 .service-pricing {
@@ -914,7 +917,10 @@ ul {
     padding: 8px 12px;
     margin-bottom: 16px;
     text-align: left;
-    flex-grow: 1;
+    height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .service-pricing-item {
@@ -952,7 +958,6 @@ ul {
     font-size: 0.9rem;
     transition: all var(--transition-fast);
     display: inline-block;
-    margin-top: auto;
 }
 
 .service-link:hover {
